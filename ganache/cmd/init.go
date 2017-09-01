@@ -21,24 +21,51 @@
 package cmd
 
 import (
-	"fmt"
+	"log"
 	"os"
+	"path/filepath"
+	"regexp"
 
 	"github.com/spf13/cobra"
+	"github.com/swarmdotmarket/ganache/templates"
 )
 
-var cfgFile string
+var initCmd = &cobra.Command{
+	Use:   "init",
+	Short: "Initialize new Ethereum project with example contracts and tests",
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) != 1 {
+			log.Fatalln("Must specify package name")
+		}
 
-var RootCmd = &cobra.Command{
-	Use:   "ganache",
-	Short: "A golang development environment for Ethereum",
+		name := args[0]
+
+		// TODO: Allow full package paths or init-ing a directory like cobra
+		match, _ := regexp.MatchString("\\w+", name)
+		if !match {
+			log.Fatalln("Invalid package name specified")
+		}
+
+		wd, err := os.Getwd()
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		path := filepath.Join(wd, name)
+
+		initProject(path)
+	},
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	if err := RootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+func init() {
+	RootCmd.AddCommand(initCmd)
+}
+
+func initProject(path string) {
+	err := os.MkdirAll(path, os.FileMode(0755))
+	if err != nil {
+		log.Fatalln(err)
 	}
+
+	templates.ExecuteTemplate(path, "project", "project", nil)
 }

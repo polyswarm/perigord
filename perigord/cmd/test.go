@@ -21,56 +21,29 @@
 package cmd
 
 import (
-	"os"
-	"path/filepath"
-	"regexp"
+	"fmt"
 
 	"github.com/spf13/cobra"
-
-	"github.com/swarmdotmarket/perigord/templates"
 )
 
-var initCmd = &cobra.Command{
-	Use:   "init",
-	Short: "Initialize new Ethereum project with example contracts and tests",
+var testCmd = &cobra.Command{
+	Use:   "test",
+	Short: "Run go and solidity tests",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) != 1 {
-			fatal("Must specify package name")
-		}
-
-		name := args[0]
-
-		// TODO: Allow full package paths or init-ing a directory like cobra
-		match, _ := regexp.MatchString("\\w+", name)
-		if !match {
-			fatal("Invalid package name specified")
-		}
-
-		wd, err := os.Getwd()
-		if err != nil {
-			fatal(err)
-		}
-
-		path := filepath.Join(wd, name)
-
-		initProject(name, path)
+		fmt.Println("test called")
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(initCmd)
+	RootCmd.AddCommand(testCmd)
 
-	// TODO: Add options like defining package names, etc
-	// Can add to config yaml and parse from project root in later invocations
-}
+	// Here you will define your flags and configuration settings.
 
-func initProject(name, path string) {
-	if err := os.MkdirAll(path, os.FileMode(0755)); err != nil {
-		fatal(err)
-	}
+	// Cobra supports Persistent Flags which will work for this command
+	// and all subcommands, e.g.:
+	// testCmd.PersistentFlags().String("foo", "", "A help for foo")
 
-	data := map[string]string{"project": name}
-	if err := templates.ExecuteTemplates(path, "project", "project", data); err != nil {
-		fatal(err)
-	}
+	// Cobra supports local flags which will only run when this command
+	// is called directly, e.g.:
+	// testCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

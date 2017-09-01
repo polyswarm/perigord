@@ -30,7 +30,6 @@ import (
 	"github.com/swarmdotmarket/perigord/templates"
 )
 
-// addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Add a new contract to the project",
@@ -66,11 +65,11 @@ func init() {
 }
 
 func addContract(name, root string) {
-	path := filepath.Join(root, "contracts", name+".sol")
+	path := filepath.Join(root, ContractsDirectory, name+".sol")
 
 	data := map[string]string{"contract": name}
-	err := templates.ExecuteTemplate(path, "contract/contract.sol", data)
-	if err != nil {
+
+	if err := templates.ExecuteTemplate(path, "contract/contract.sol", data); err != nil {
 		fatal(err)
 	}
 }

@@ -21,56 +21,26 @@
 package cmd
 
 import (
-	"os"
-	"path/filepath"
-	"regexp"
+	"fmt"
 
 	"github.com/spf13/cobra"
-
-	"github.com/swarmdotmarket/perigord/templates"
 )
 
-var initCmd = &cobra.Command{
-	Use:   "init",
-	Short: "Initialize new Ethereum project with example contracts and tests",
+var migrateCmd = &cobra.Command{
+	Use:   "migrate",
+	Short: "Run migrations to deploy contracts",
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) != 1 {
-			fatal("Must specify package name")
-		}
-
-		name := args[0]
-
-		// TODO: Allow full package paths or init-ing a directory like cobra
-		match, _ := regexp.MatchString("\\w+", name)
-		if !match {
-			fatal("Invalid package name specified")
-		}
-
-		wd, err := os.Getwd()
-		if err != nil {
-			fatal(err)
-		}
-
-		path := filepath.Join(wd, name)
-
-		initProject(name, path)
+		fmt.Println("migrate called")
 	},
 }
 
-func init() {
-	RootCmd.AddCommand(initCmd)
-
-	// TODO: Add options like defining package names, etc
-	// Can add to config yaml and parse from project root in later invocations
+var deployCmd = &cobra.Command{
+	Use:   "deploy",
+	Short: "(alias for migrate)",
+	Run:   migrateCmd.Run,
 }
 
-func initProject(name, path string) {
-	if err := os.MkdirAll(path, os.FileMode(0755)); err != nil {
-		fatal(err)
-	}
-
-	data := map[string]string{"project": name}
-	if err := templates.ExecuteTemplates(path, "project", "project", data); err != nil {
-		fatal(err)
-	}
+func init() {
+	RootCmd.AddCommand(migrateCmd)
+	RootCmd.AddCommand(deployCmd)
 }

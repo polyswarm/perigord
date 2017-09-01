@@ -28,6 +28,15 @@ import (
 	"strings"
 )
 
+const (
+	ProjectConfigFilename = "perigord.yaml"
+	ContractsDirectory    = "contracts"
+	BuildDirectory        = "build"
+	BindingsDirectory     = "bindings"
+	MigrationsDirectory   = "migrations"
+	TestDirectory         = "test"
+)
+
 func fatal(v ...interface{}) {
 	fmt.Println(v...)
 	os.Exit(1)
@@ -48,8 +57,6 @@ func exists(path string) (bool, error) {
 
 	return false, nil
 }
-
-const ProjectConfigFilename = "perigord.yaml"
 
 func findRoot(path string) (string, error) {
 	if strings.HasSuffix(path, string(filepath.Separator)) {

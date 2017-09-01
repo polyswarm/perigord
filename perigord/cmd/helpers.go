@@ -26,6 +26,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 )
 
@@ -39,7 +40,7 @@ const (
 )
 
 func Fatal(v ...interface{}) {
-	fmt.Println("Error: ", v)
+	fmt.Println("Error:", v)
 	os.Exit(1)
 }
 
@@ -103,7 +104,7 @@ func runInRoot(f func() error) error {
 
 func runStub(stubcommand string, stubargs ...string) error {
 	return runInRoot(func() error {
-		command := "go"
+		command := runtime.GOROOT() + "/bin/go"
 		args := append([]string{"run", "stub/main.go", stubcommand}, stubargs...)
 		return execWithOutput(command, args...)
 	})

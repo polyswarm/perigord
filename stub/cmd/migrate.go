@@ -21,16 +21,19 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+
+	"github.com/swarmdotmarket/perigord/migration"
+	perigord "github.com/swarmdotmarket/perigord/perigord/cmd"
 )
 
 var migrateCmd = &cobra.Command{
 	Use:   "migrate",
 	Short: "A brief description of your command",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("migrate called")
+		if err := migration.RunMigrations(); err != nil {
+			perigord.Fatal(err)
+		}
 	},
 }
 

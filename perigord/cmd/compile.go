@@ -67,7 +67,7 @@ func compileContract(path string) error {
 	// TODO: This just shells out atm, could directly integrate abigen and call
 	// into it as a library later
 	command := "solc"
-	args := []string{path, "--bin", "--abi", "--optimize", "-o", BuildDirectory}
+	args := []string{path, "--bin", "--abi", "--optimize", "--overwrite", "-o", BuildDirectory}
 	return execWithOutput(command, args...)
 }
 

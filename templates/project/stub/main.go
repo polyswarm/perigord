@@ -2,7 +2,11 @@
 
 package main
 
-import "github.com/swarmdotmarket/perigord/stub"
+// Relative import here forces inclusion of our migrations
+import (
+	_ "../migrations"
+	"github.com/swarmdotmarket/perigord/stub"
+)
 
 func main() {
 	stub.StubMain()

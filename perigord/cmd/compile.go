@@ -46,16 +46,13 @@ var compileCmd = &cobra.Command{
 		if err := os.Chdir(root); err != nil {
 			fatal(err)
 		}
+		defer os.Chdir(wd)
 
 		if err := compileContracts(); err != nil {
 			fatal(err)
 		}
 
 		if err := generateBindings(); err != nil {
-			fatal(err)
-		}
-
-		if err := os.Chdir(wd); err != nil {
 			fatal(err)
 		}
 	},
@@ -98,7 +95,7 @@ func generateBindings() error {
 	}
 
 	for _, match := range matches {
-		generateBinding(match)
+		generateBinding(strings.TrimSuffix(match, filepath.Ext(match)))
 	}
 
 	return nil
@@ -107,8 +104,10 @@ func generateBindings() error {
 func generateBinding(path string) error {
 	// TODO: Allow alternate binding directories / package names, in config file
 	cmd := "abigen"
-	name := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
-	outfile := filepath.Join(BindingsDirectory, name) + ".go"
-	args := []string{"--abi", path, "--pkg", "bindings", "--type", name, "--out", outfile}
+	name := filepath.Base(path)
+	abifile := path + ".abi"
+	binfile := path + ".bin"
+	outfile := filepath.Join(BindingsDirectory, filepath.Base(name)) + ".go"
+	args := []string{"--abi", abifile, "--bin", binfile, "--pkg", "bindings", "--type", name, "--out", outfile}
 	return exec.Command(cmd, args...).Run()
 }

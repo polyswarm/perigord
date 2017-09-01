@@ -21,15 +21,14 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
+	"path/filepath"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-)
 
-var cfgFile string
+	perigord "github.com/swarmdotmarket/perigord/perigord/cmd"
+)
 
 var RootCmd = &cobra.Command{
 	Use:   "stub",
@@ -38,33 +37,25 @@ var RootCmd = &cobra.Command{
 
 func Execute() {
 	if err := RootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		perigord.Fatal(err)
 	}
 }
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.stub.yaml)")
 }
 
 func initConfig() {
-	if cfgFile != "" {
-		viper.SetConfigFile(cfgFile)
-	} else {
-		home, err := homedir.Dir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".stub")
+	wd, err := os.Getwd()
+	if err != nil {
+		perigord.Fatal(err)
 	}
 
-	viper.AutomaticEnv()
-
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	root, _ := perigord.FindRoot(wd)
+	if root != "" {
+		viper.SetConfigFile(filepath.Join(root, perigord.ProjectConfigFilename))
+		if err := viper.ReadInConfig(); err != nil {
+			perigord.Fatal(err)
+		}
 	}
 }

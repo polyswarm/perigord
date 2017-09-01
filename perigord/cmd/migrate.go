@@ -29,7 +29,7 @@ var migrateCmd = &cobra.Command{
 	Short: "Run migrations to deploy contracts",
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := runStub("migrate"); err != nil {
-			fatal(err)
+			Fatal(err)
 		}
 	},
 }

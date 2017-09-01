@@ -38,8 +38,8 @@ const (
 	TestDirectory         = "test"
 )
 
-func fatal(v ...interface{}) {
-	fmt.Println(v...)
+func Fatal(v ...interface{}) {
+	fmt.Println("Error: ", v)
 	os.Exit(1)
 }
 
@@ -59,7 +59,7 @@ func exists(path string) (bool, error) {
 	return false, nil
 }
 
-func findRoot(path string) (string, error) {
+func FindRoot(path string) (string, error) {
 	if strings.HasSuffix(path, string(filepath.Separator)) {
 		return "", errors.New("Could not find project root")
 	}
@@ -72,7 +72,7 @@ func findRoot(path string) (string, error) {
 		return path, nil
 	}
 
-	return findRoot(filepath.Dir(path))
+	return FindRoot(filepath.Dir(path))
 }
 
 func execWithOutput(command string, args ...string) error {
@@ -88,7 +88,7 @@ func runInRoot(f func() error) error {
 		return err
 	}
 
-	root, err := findRoot(wd)
+	root, err := FindRoot(wd)
 	if err != nil {
 		return err
 	}

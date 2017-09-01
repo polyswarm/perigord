@@ -40,7 +40,7 @@ var compileCmd = &cobra.Command{
 			return generateBindings()
 		})
 		if err != nil {
-			fatal(err)
+			Fatal(err)
 		}
 	},
 }

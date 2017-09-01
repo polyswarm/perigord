@@ -35,7 +35,7 @@ var initCmd = &cobra.Command{
 	Short: "Initialize new Ethereum project with example contracts and tests",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
-			fatal("Must specify package name")
+			Fatal("Must specify package name")
 		}
 
 		name := args[0]
@@ -43,12 +43,12 @@ var initCmd = &cobra.Command{
 		// TODO: Allow full package paths or init-ing a directory like cobra
 		match, _ := regexp.MatchString("\\w+", name)
 		if !match {
-			fatal("Invalid package name specified")
+			Fatal("Invalid package name specified")
 		}
 
 		wd, err := os.Getwd()
 		if err != nil {
-			fatal(err)
+			Fatal(err)
 		}
 
 		path := filepath.Join(wd, name)
@@ -66,11 +66,11 @@ func init() {
 
 func initProject(name, path string) {
 	if err := os.MkdirAll(path, os.FileMode(0755)); err != nil {
-		fatal(err)
+		Fatal(err)
 	}
 
 	data := map[string]string{"project": name}
 	if err := templates.ExecuteTemplates(path, "project", "project", data); err != nil {
-		fatal(err)
+		Fatal(err)
 	}
 }

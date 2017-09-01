@@ -29,8 +29,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
-
 var RootCmd = &cobra.Command{
 	Use:   "perigord",
 	Short: "A golang development environment for Ethereum",
@@ -52,15 +50,14 @@ func init() {
 func initConfig() {
 	wd, err := os.Getwd()
 	if err != nil {
-		fatal(err)
+		Fatal(err)
 	}
 
-	root, _ := findRoot(wd)
+	root, _ := FindRoot(wd)
 	if root != "" {
 		viper.SetConfigFile(filepath.Join(root, ProjectConfigFilename))
-	}
-
-	if err := viper.ReadInConfig(); err != nil {
-		fatal(err)
+		if err := viper.ReadInConfig(); err != nil {
+			Fatal(err)
+		}
 	}
 }

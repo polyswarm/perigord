@@ -35,7 +35,7 @@ var addCmd = &cobra.Command{
 	Short: "Add a new contract to the project",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
-			fatal("Must specify package name")
+			Fatal("Must specify package name")
 		}
 
 		name := args[0]
@@ -43,17 +43,17 @@ var addCmd = &cobra.Command{
 		// TODO: Allow full contract paths or detecting filenames
 		match, _ := regexp.MatchString("\\w+", name)
 		if !match {
-			fatal("Invalid contract name specified")
+			Fatal("Invalid contract name specified")
 		}
 
 		wd, err := os.Getwd()
 		if err != nil {
-			fatal(err)
+			Fatal(err)
 		}
 
-		root, err := findRoot(wd)
+		root, err := FindRoot(wd)
 		if err != nil {
-			fatal(err)
+			Fatal(err)
 		}
 
 		addContract(name, root)
@@ -70,6 +70,6 @@ func addContract(name, root string) {
 	data := map[string]string{"contract": name}
 
 	if err := templates.ExecuteTemplate(path, "contract/contract.sol", data); err != nil {
-		fatal(err)
+		Fatal(err)
 	}
 }

@@ -18,27 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package cmd
+package main
 
-import (
-	"fmt"
-	"os"
+import "github.com/swarmdotmarket/perigord/perigord/cmd"
 
-	"github.com/spf13/cobra"
-)
-
-var cfgFile string
-
-var RootCmd = &cobra.Command{
-	Use:   "ganache",
-	Short: "A golang development environment for Ethereum",
-}
-
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	if err := RootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+func main() {
+	cmd.Execute()
 }

@@ -3,4 +3,4 @@
 
 //go:generate go-bindata -nomemcopy -prefix templates -pkg templates -ignore templates/*.go -o templates/bindata.go templates/...
 
-package ganache
+package perigord

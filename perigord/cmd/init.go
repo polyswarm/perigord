@@ -27,7 +27,7 @@ import (
 	"regexp"
 
 	"github.com/spf13/cobra"
-	"github.com/swarmdotmarket/ganache/templates"
+	"github.com/swarmdotmarket/perigord/templates"
 )
 
 var initCmd = &cobra.Command{

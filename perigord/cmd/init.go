@@ -21,12 +21,12 @@
 package cmd
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 	"regexp"
 
 	"github.com/spf13/cobra"
+
 	"github.com/swarmdotmarket/perigord/templates"
 )
 
@@ -35,7 +35,7 @@ var initCmd = &cobra.Command{
 	Short: "Initialize new Ethereum project with example contracts and tests",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
-			log.Fatalln("Must specify package name")
+			fatal("Must specify package name")
 		}
 
 		name := args[0]
@@ -43,17 +43,17 @@ var initCmd = &cobra.Command{
 		// TODO: Allow full package paths or init-ing a directory like cobra
 		match, _ := regexp.MatchString("\\w+", name)
 		if !match {
-			log.Fatalln("Invalid package name specified")
+			fatal("Invalid package name specified")
 		}
 
 		wd, err := os.Getwd()
 		if err != nil {
-			log.Fatalln(err)
+			fatal(err)
 		}
 
 		path := filepath.Join(wd, name)
 
-		initProject(path)
+		initProject(name, path)
 	},
 }
 
@@ -61,11 +61,15 @@ func init() {
 	RootCmd.AddCommand(initCmd)
 }
 
-func initProject(path string) {
+func initProject(name, path string) {
 	err := os.MkdirAll(path, os.FileMode(0755))
 	if err != nil {
-		log.Fatalln(err)
+		fatal(err)
 	}
 
-	templates.ExecuteTemplate(path, "project", "project", nil)
+	data := map[string]string{"project": name}
+	err = templates.ExecuteTemplates(path, "project", "project", data)
+	if err != nil {
+		fatal(err)
+	}
 }

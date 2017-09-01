@@ -23,8 +23,8 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 
+	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -32,12 +32,10 @@ import (
 var cfgFile string
 
 var RootCmd = &cobra.Command{
-	Use:   "perigord",
-	Short: "A golang development environment for Ethereum",
+	Use:   "stub",
+	Short: "Linked into perigord projects to dispatch commands from the main application",
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -47,20 +45,26 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.stub.yaml)")
 }
 
 func initConfig() {
-	wd, err := os.Getwd()
-	if err != nil {
-		fatal(err)
+	if cfgFile != "" {
+		viper.SetConfigFile(cfgFile)
+	} else {
+		home, err := homedir.Dir()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		viper.AddConfigPath(home)
+		viper.SetConfigName(".stub")
 	}
 
-	root, _ := findRoot(wd)
-	if root != "" {
-		viper.SetConfigFile(filepath.Join(root, ProjectConfigFilename))
-	}
+	viper.AutomaticEnv()
 
-	if err := viper.ReadInConfig(); err != nil {
-		fatal(err)
+	if err := viper.ReadInConfig(); err == nil {
+		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}
 }

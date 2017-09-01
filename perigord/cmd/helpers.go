@@ -24,6 +24,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 )
@@ -72,4 +73,38 @@ func findRoot(path string) (string, error) {
 	}
 
 	return findRoot(filepath.Dir(path))
+}
+
+func execWithOutput(command string, args ...string) error {
+	cmd := exec.Command(command, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
+}
+
+func runInRoot(f func() error) error {
+	wd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	root, err := findRoot(wd)
+	if err != nil {
+		return err
+	}
+
+	if err := os.Chdir(root); err != nil {
+		return err
+	}
+	defer os.Chdir(wd)
+
+	return f()
+}
+
+func runStub(stubcommand string, stubargs ...string) error {
+	return runInRoot(func() error {
+		command := "go"
+		args := append([]string{"run", "stub/main.go", stubcommand}, stubargs...)
+		return execWithOutput(command, args...)
+	})
 }

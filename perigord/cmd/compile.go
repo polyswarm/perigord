@@ -22,7 +22,6 @@ package cmd
 
 import (
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -33,26 +32,14 @@ var compileCmd = &cobra.Command{
 	Use:   "compile",
 	Short: "Compile contract source files",
 	Run: func(cmd *cobra.Command, args []string) {
-		wd, err := os.Getwd()
+		err := runInRoot(func() error {
+			if err := compileContracts(); err != nil {
+				return err
+			}
+
+			return generateBindings()
+		})
 		if err != nil {
-			fatal(err)
-		}
-
-		root, err := findRoot(wd)
-		if err != nil {
-			fatal(err)
-		}
-
-		if err := os.Chdir(root); err != nil {
-			fatal(err)
-		}
-		defer os.Chdir(wd)
-
-		if err := compileContracts(); err != nil {
-			fatal(err)
-		}
-
-		if err := generateBindings(); err != nil {
 			fatal(err)
 		}
 	},
@@ -79,9 +66,9 @@ func compileContracts() error {
 func compileContract(path string) error {
 	// TODO: This just shells out atm, could directly integrate abigen and call
 	// into it as a library later
-	cmd := "solc"
+	command := "solc"
 	args := []string{path, "--bin", "--abi", "--optimize", "-o", BuildDirectory}
-	return exec.Command(cmd, args...).Run()
+	return execWithOutput(command, args...)
 }
 
 func generateBindings() error {
@@ -103,11 +90,11 @@ func generateBindings() error {
 
 func generateBinding(path string) error {
 	// TODO: Allow alternate binding directories / package names, in config file
-	cmd := "abigen"
+	command := "abigen"
 	name := filepath.Base(path)
 	abifile := path + ".abi"
 	binfile := path + ".bin"
 	outfile := filepath.Join(BindingsDirectory, filepath.Base(name)) + ".go"
 	args := []string{"--abi", abifile, "--bin", binfile, "--pkg", "bindings", "--type", name, "--out", outfile}
-	return exec.Command(cmd, args...).Run()
+	return execWithOutput(command, args...)
 }

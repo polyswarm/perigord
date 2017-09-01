@@ -22,45 +22,18 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
-var cfgFile string
-
-var RootCmd = &cobra.Command{
-	Use:   "perigord",
-	Short: "A golang development environment for Ethereum",
-}
-
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	if err := RootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+var testCmd = &cobra.Command{
+	Use:   "test",
+	Short: "A brief description of your command",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("test called")
+	},
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
-}
-
-func initConfig() {
-	wd, err := os.Getwd()
-	if err != nil {
-		fatal(err)
-	}
-
-	root, _ := findRoot(wd)
-	if root != "" {
-		viper.SetConfigFile(filepath.Join(root, ProjectConfigFilename))
-	}
-
-	if err := viper.ReadInConfig(); err != nil {
-		fatal(err)
-	}
+	RootCmd.AddCommand(testCmd)
 }

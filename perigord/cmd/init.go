@@ -16,54 +16,77 @@ package cmd
 import (
 	"os"
 	"path/filepath"
-	"regexp"
 
 	"github.com/spf13/cobra"
-
+	"github.com/spf13/viper"
 	"github.com/swarmdotmarket/perigord/templates"
 )
 
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize new Ethereum project with example contracts and tests",
+	Long: `Initialize (perigord init) will create a new application, with a license
+and the appropriate structure for a perigord-based project.
+
+  * If a name is provided, it will be created in the current directory;
+  * If no name is provided, the current directory will be assumed;
+  * If a relative path is provided, it will be created inside $GOPATH
+    (e.g. github.com/swarmdotmarket/perigord);
+  * If an absolute path is provided, it will be created;
+  * If the directory already exists but is empty, it will be used.
+
+Init will not use an existing directory with contents.`,
+
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) != 1 {
-			Fatal("Must specify package name")
-		}
-
-		name := args[0]
-
-		// TODO: Allow full package paths or init-ing a directory like cobra
-		match, _ := regexp.MatchString("\\w+", name)
-		if !match {
-			Fatal("Invalid package name specified")
-		}
-
 		wd, err := os.Getwd()
 		if err != nil {
 			Fatal(err)
 		}
 
-		path := filepath.Join(wd, name)
+		var project *Project
+		if len(args) == 0 {
+			project = NewProjectFromPath(wd)
+		} else if len(args) == 1 {
+			arg := args[0]
+			if arg[0] == '.' {
+				arg = filepath.Join(wd, arg)
+			}
+			if filepath.IsAbs(arg) {
+				project = NewProjectFromPath(arg)
+			} else {
+				project = NewProject(arg)
+			}
+		} else {
+			Fatal("please provide only one argument")
+		}
 
-		initProject(name, path)
+		initializeProject(project)
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(initCmd)
 
-	// TODO: Add options like defining package names, etc
-	// Can add to config yaml and parse from project root in later invocations
+	initCmd.PersistentFlags().StringP("author", "a", "YOUR NAME", "author name for copyright attribution")
+	initCmd.PersistentFlags().StringP("license", "l", "", "name of license for the project")
+
+	viper.BindPFlag("author", initCmd.PersistentFlags().Lookup("author"))
+	viper.SetDefault("author", "NAME HERE <EMAIL ADDRESS>")
+	viper.BindPFlag("license", initCmd.PersistentFlags().Lookup("license"))
+	viper.SetDefault("license", "apache")
 }
 
-func initProject(name, path string) {
-	if err := os.MkdirAll(path, os.FileMode(0755)); err != nil {
+func initializeProject(project *Project) {
+	if err := os.MkdirAll(project.AbsPath(), os.FileMode(0755)); err != nil {
 		Fatal(err)
 	}
 
-	data := map[string]string{"project": name}
-	if err := templates.ExecuteTemplates(path, "project", "project", data); err != nil {
+	data := map[string]string{
+		"project": project.Name(),
+		"license": project.License().Name,
+	}
+
+	if err := templates.ExecuteTemplates(project.AbsPath(), "project", "project", data); err != nil {
 		Fatal(err)
 	}
 }

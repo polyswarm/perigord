@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	_ "{{.project}}/test"
+	_ "{{.project}}/tests"
 	. "gopkg.in/check.v1"
 )
 

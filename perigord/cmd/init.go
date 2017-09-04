@@ -77,12 +77,12 @@ func init() {
 }
 
 func initializeProject(project *Project) {
-	if !isEmpty(project.AbsPath()) {
-		Fatal("Refusing to initialize a non-empty dir")
-	}
-
 	if err := os.MkdirAll(project.AbsPath(), os.FileMode(0755)); err != nil {
 		Fatal(err)
+	}
+
+	if !isEmpty(project.AbsPath()) {
+		Fatal("Cowardly refusing to initialize a non-empty dir")
 	}
 
 	data := map[string]string{

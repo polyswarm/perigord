@@ -17,10 +17,13 @@
 package cmd
 
 import (
+	"fmt"
 	"strings"
 	"time"
 
 	"github.com/spf13/viper"
+
+	"github.com/swarmdotmarket/perigord/templates"
 )
 
 // Licenses contains all possible licenses a user can choose from.
@@ -49,6 +52,29 @@ func init() {
 	//	initGpl3()
 	//	initLgpl()
 	//	initAgpl()
+}
+
+func initializeLicense(name string, possibleMatches []string) error {
+	asset := strings.ToLower(name)
+
+	data := map[string]string{
+		"copyright": copyrightLine(),
+	}
+
+	buf, err := templates.ExecuteTemplate(fmt.Sprintf("licenses/%s/header.tpl", asset), data)
+	if err != nil {
+		return err
+	}
+	header := buf.String()
+
+	buf, err = templates.ExecuteTemplate(fmt.Sprintf("licenses/%s/text.tpl", asset), data)
+	if err != nil {
+		return err
+	}
+	text := buf.String()
+
+	Licenses[asset] = License{name, possibleMatches, header, text}
+	return nil
 }
 
 // getLicense returns license specified by user in flag or in config.

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"../bindings"
+	"{{.project}}/bindings"
 	. "github.com/swarmdotmarket/perigord/migration"
 )
 

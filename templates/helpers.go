@@ -23,8 +23,47 @@ import (
 	"text/template"
 )
 
-func ExecuteTemplate(path, name string, data interface{}) error {
+// From github.com/spf13/cobra, used under Apache 2.0 license
+// commentfyString comments every line of in.
+func commentifyString(in string) string {
+	var newlines []string
+	lines := strings.Split(in, "\n")
+	for _, line := range lines {
+		if strings.HasPrefix(line, "//") {
+			newlines = append(newlines, line)
+		} else {
+			if line == "" {
+				newlines = append(newlines, "//")
+			} else {
+				newlines = append(newlines, "// "+line)
+			}
+		}
+	}
+	return strings.Join(newlines, "\n")
+}
+
+func ExecuteTemplate(name string, data interface{}) (*bytes.Buffer, error) {
 	asset, err := Asset(name)
+	if err != nil {
+		return nil, err
+	}
+
+	tpl, err := template.New("").Funcs(template.FuncMap{"comment": commentifyString}).Parse(string(asset))
+	if err != nil {
+		return nil, err
+	}
+
+	buf := new(bytes.Buffer)
+	err = tpl.Execute(buf, data)
+	if err != nil {
+		return nil, err
+	}
+
+	return buf, nil
+}
+
+func RestoreTemplate(path, name string, data interface{}) error {
+	buf, err := ExecuteTemplate(name, data)
 	if err != nil {
 		return err
 	}
@@ -39,17 +78,6 @@ func ExecuteTemplate(path, name string, data interface{}) error {
 		return err
 	}
 
-	tpl, err := template.New("").Parse(string(asset))
-	if err != nil {
-		return err
-	}
-
-	buf := new(bytes.Buffer)
-	err = tpl.Execute(buf, data)
-	if err != nil {
-		return err
-	}
-
 	err = ioutil.WriteFile(path, buf.Bytes(), info.Mode())
 	if err != nil {
 		return err
@@ -58,16 +86,16 @@ func ExecuteTemplate(path, name string, data interface{}) error {
 	return nil
 }
 
-func ExecuteTemplates(dir, name, prefix string, data interface{}) error {
+func RestoreTemplates(dir, name, prefix string, data interface{}) error {
 	filename := strings.TrimPrefix(name, prefix)
 	children, err := AssetDir(name)
 
 	if err != nil {
-		return ExecuteTemplate(filepath.Join(dir, filename), name, data)
+		return RestoreTemplate(filepath.Join(dir, filename), name, data)
 	}
 
 	for _, child := range children {
-		err = ExecuteTemplates(dir, filepath.Join(name, child), prefix, data)
+		err = RestoreTemplates(dir, filepath.Join(name, child), prefix, data)
 		if err != nil {
 			return err
 		}

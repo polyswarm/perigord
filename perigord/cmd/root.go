@@ -46,9 +46,9 @@ func initConfig() {
 		Fatal(err)
 	}
 
-	root, _ := FindRoot(wd)
-	if root != "" {
-		viper.SetConfigFile(filepath.Join(root, ProjectConfigFilename))
+	project, _ := FindProject(wd)
+	if project != nil {
+		viper.SetConfigFile(filepath.Join(project.AbsPath(), ProjectConfigFilename))
 		if err := viper.ReadInConfig(); err != nil {
 			Fatal(err)
 		}

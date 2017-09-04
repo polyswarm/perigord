@@ -4,7 +4,7 @@ package main
 
 // Relative import here forces inclusion of our migrations
 import (
-	_ "../migrations"
+	_ "{{.project}}/migrations"
 	"github.com/swarmdotmarket/perigord/stub"
 )
 

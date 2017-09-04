@@ -77,6 +77,10 @@ func init() {
 }
 
 func initializeProject(project *Project) {
+	if !isEmpty(project.AbsPath()) {
+		Fatal("Refusing to initialize a non-empty dir")
+	}
+
 	if err := os.MkdirAll(project.AbsPath(), os.FileMode(0755)); err != nil {
 		Fatal(err)
 	}
@@ -86,7 +90,7 @@ func initializeProject(project *Project) {
 		"license": project.License().Name,
 	}
 
-	if err := templates.ExecuteTemplates(project.AbsPath(), "project", "project", data); err != nil {
+	if err := templates.RestoreTemplates(project.AbsPath(), "project", "project", data); err != nil {
 		Fatal(err)
 	}
 }

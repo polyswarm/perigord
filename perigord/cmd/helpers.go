@@ -16,6 +16,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -37,6 +38,7 @@ func Fatal(v ...interface{}) {
 	os.Exit(1)
 }
 
+// This function from github.com/spf13/cobra used under Apache 2.0 license
 func exists(path string) (bool, error) {
 	if path == "" {
 		return false, nil
@@ -53,20 +55,50 @@ func exists(path string) (bool, error) {
 	return false, nil
 }
 
-func FindRoot(path string) (string, error) {
+// This function from github.com/spf13/cobra used under Apache 2.0 license
+func isEmpty(path string) bool {
+	fi, err := os.Stat(path)
+	if err != nil {
+		Fatal(err)
+	}
+
+	if !fi.IsDir() {
+		return fi.Size() == 0
+	}
+
+	f, err := os.Open(path)
+	if err != nil {
+		Fatal(err)
+	}
+	defer f.Close()
+
+	names, err := f.Readdirnames(-1)
+	if err != nil && err != io.EOF {
+		Fatal(err)
+	}
+
+	for _, name := range names {
+		if len(name) > 0 && name[0] != '.' {
+			return false
+		}
+	}
+	return true
+}
+
+func FindProject(path string) (*Project, error) {
 	if strings.HasSuffix(path, string(filepath.Separator)) {
-		return "", errors.New("Could not find project root")
+		return nil, errors.New("Could not find project root")
 	}
 
 	e, err := exists(filepath.Join(path, ProjectConfigFilename))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	if e {
-		return path, nil
+		return NewProjectFromPath(path), nil
 	}
 
-	return FindRoot(filepath.Dir(path))
+	return FindProject(filepath.Dir(path))
 }
 
 func execWithOutput(command string, args ...string) error {
@@ -82,12 +114,12 @@ func runInRoot(f func() error) error {
 		return err
 	}
 
-	root, err := FindRoot(wd)
+	project, err := FindProject(wd)
 	if err != nil {
 		return err
 	}
 
-	if err := os.Chdir(root); err != nil {
+	if err := os.Chdir(project.AbsPath()); err != nil {
 		return err
 	}
 	defer os.Chdir(wd)

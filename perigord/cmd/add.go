@@ -44,12 +44,12 @@ var addCmd = &cobra.Command{
 			Fatal(err)
 		}
 
-		root, err := FindRoot(wd)
+		project, err := FindProject(wd)
 		if err != nil {
 			Fatal(err)
 		}
 
-		addContract(name, root)
+		addContract(name, project)
 	},
 }
 
@@ -57,12 +57,12 @@ func init() {
 	RootCmd.AddCommand(addCmd)
 }
 
-func addContract(name, root string) {
-	path := filepath.Join(root, ContractsDirectory, name+".sol")
+func addContract(name string, project *Project) {
+	path := filepath.Join(project.AbsPath(), ContractsDirectory, name+".sol")
 
 	data := map[string]string{"contract": name}
 
-	if err := templates.ExecuteTemplate(path, "contract/contract.sol", data); err != nil {
+	if err := templates.RestoreTemplate(path, "contract/contract.sol", data); err != nil {
 		Fatal(err)
 	}
 }

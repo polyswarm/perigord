@@ -21,8 +21,7 @@ import (
 )
 
 var migrateCmd = &cobra.Command{
-	Use:   "migrate",
-	Short: "A brief description of your command",
+	Use: "migrate",
 	Run: func(cmd *cobra.Command, args []string) {
 		if err := migration.RunMigrations(); err != nil {
 			perigord.Fatal(err)

@@ -14,16 +14,23 @@
 package cmd
 
 import (
-	"fmt"
+	"runtime"
 
 	"github.com/spf13/cobra"
+	perigord "github.com/swarmdotmarket/perigord/perigord/cmd"
 )
 
 var testCmd = &cobra.Command{
-	Use:   "test",
-	Short: "A brief description of your command",
+	Use: "test",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("test called")
+		err := perigord.RunInRoot(func() error {
+			command := runtime.GOROOT() + "/bin/go"
+			args := []string{"test"}
+			return perigord.ExecWithOutput(command, args...)
+		})
+		if err != nil {
+			perigord.Fatal(err)
+		}
 	},
 }
 

@@ -45,16 +45,30 @@ func (s Migrations) Less(i, j int) bool {
 }
 
 type Migrator struct {
-	Auth       *bind.TransactOpts
-	Backend    *backends.SimulatedBackend
+	auth       *bind.TransactOpts
+	backend    *backends.SimulatedBackend
 	migrations Migrations
+}
+
+var migrator *Migrator = &Migrator{}
+
+func (m *Migrator) Auth() *bind.TransactOpts {
+	return m.auth
+}
+
+func (m *Migrator) Backend() *backends.SimulatedBackend {
+	return m.backend
+}
+
+func (m *Migrator) AddMigration(migration *Migration) {
+	m.migrations = append(m.migrations, migration)
 }
 
 func (m *Migrator) RunMigrations() error {
 	// Generate a new random account and a funded simulator
 	key, _ := crypto.GenerateKey()
-	m.Auth = bind.NewKeyedTransactor(key)
-	m.Backend = backends.NewSimulatedBackend(core.GenesisAlloc{m.Auth.From: {Balance: big.NewInt(10000000000)}})
+	m.auth = bind.NewKeyedTransactor(key)
+	m.backend = backends.NewSimulatedBackend(core.GenesisAlloc{m.auth.From: {Balance: big.NewInt(10000000000)}})
 
 	// TODO: Check migration contract for last run and only run new
 	sort.Sort(m.migrations)
@@ -64,15 +78,17 @@ func (m *Migrator) RunMigrations() error {
 		}
 	}
 
-	m.Backend.Commit()
+	m.backend.Commit()
 
 	return nil
 }
 
-var migrator *Migrator = &Migrator{}
+func Auth() *bind.TransactOpts {
+	return migrator.Auth()
+}
 
-func (m *Migrator) AddMigration(migration *Migration) {
-	m.migrations = append(m.migrations, migration)
+func Backend() *backends.SimulatedBackend {
+	return migrator.Backend()
 }
 
 func AddMigration(migration *Migration) {

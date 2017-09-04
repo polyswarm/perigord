@@ -111,14 +111,14 @@ func findProject(path string) (*Project, error) {
 	return findProject(filepath.Dir(path))
 }
 
-func execWithOutput(command string, args ...string) error {
+func ExecWithOutput(command string, args ...string) error {
 	cmd := exec.Command(command, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
 }
 
-func runInRoot(f func() error) error {
+func RunInRoot(f func() error) error {
 	wd, err := os.Getwd()
 	if err != nil {
 		return err
@@ -138,9 +138,9 @@ func runInRoot(f func() error) error {
 }
 
 func runStub(stubcommand string, stubargs ...string) error {
-	return runInRoot(func() error {
+	return RunInRoot(func() error {
 		command := runtime.GOROOT() + "/bin/go"
 		args := append([]string{"run", "stub/main.go", stubcommand}, stubargs...)
-		return execWithOutput(command, args...)
+		return ExecWithOutput(command, args...)
 	})
 }

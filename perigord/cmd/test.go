@@ -14,8 +14,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -23,20 +21,12 @@ var testCmd = &cobra.Command{
 	Use:   "test",
 	Short: "Run go and solidity tests",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("test called")
+		if err := runStub("test"); err != nil {
+			Fatal(err)
+		}
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(testCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// testCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// testCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

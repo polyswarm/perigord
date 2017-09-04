@@ -25,7 +25,7 @@ var compileCmd = &cobra.Command{
 	Use:   "compile",
 	Short: "Compile contract source files",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := runInRoot(func() error {
+		err := RunInRoot(func() error {
 			if err := compileContracts(); err != nil {
 				return err
 			}
@@ -38,8 +38,15 @@ var compileCmd = &cobra.Command{
 	},
 }
 
+var buildCmd = &cobra.Command{
+	Use:   "build",
+	Short: "(alias for compile)",
+	Run:   compileCmd.Run,
+}
+
 func init() {
 	RootCmd.AddCommand(compileCmd)
+	RootCmd.AddCommand(buildCmd)
 }
 
 func compileContracts() error {
@@ -61,7 +68,7 @@ func compileContract(path string) error {
 	// into it as a library later
 	command := "solc"
 	args := []string{path, "--bin", "--abi", "--optimize", "--overwrite", "-o", BuildDirectory}
-	return execWithOutput(command, args...)
+	return ExecWithOutput(command, args...)
 }
 
 func generateBindings() error {
@@ -89,5 +96,5 @@ func generateBinding(path string) error {
 	binfile := path + ".bin"
 	outfile := filepath.Join(BindingsDirectory, filepath.Base(name)) + ".go"
 	args := []string{"--abi", abifile, "--bin", binfile, "--pkg", "bindings", "--type", name, "--out", outfile}
-	return execWithOutput(command, args...)
+	return ExecWithOutput(command, args...)
 }

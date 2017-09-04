@@ -4,6 +4,8 @@ import (
 	. "gopkg.in/check.v1"
 
 	"github.com/swarmdotmarket/perigord/testing"
+
+	"{{.project}}/bindings"
 )
 
 type {{.test}} struct{}

@@ -44,19 +44,17 @@ func init() {
 	// Allows a user to not use a license.
 	Licenses["none"] = License{"None", []string{"none", "false"}, "", ""}
 
-	//	initApache2()
-	//	initMit()
-	//	initBsdClause3()
-	//	initBsdClause2()
-	//	initGpl2()
-	//	initGpl3()
-	//	initLgpl()
-	//	initAgpl()
+	initializeLicense("agpl", "GNU Affero General Public License", []string{"agpl", "affero gpl", "gnu agpl"})
+	initializeLicense("apache", "Apache 2.0", []string{"apache", "apache20", "apache 2.0", "apache2.0", "apache-2.0"})
+	initializeLicense("freebsd", "Simplified BSD License", []string{"freebsd", "simpbsd", "simple bsd", "2-clause bsd", "2 clause bsd", "simplified bsd license"})
+	initializeLicense("bsd", "NewBSD", []string{"bsd", "newbsd", "3 clause bsd", "3-clause bsd"})
+	initializeLicense("gpl2", "GNU General Public License 2.0", []string{"gpl2", "gnu gpl2", "gplv2"})
+	initializeLicense("gpl3", "GNU General Public License 3.0", []string{"gpl3", "gplv3", "gpl", "gnu gpl3", "gnu gpl"})
+	initializeLicense("lgpl", "GNU Lesser General Public License", []string{"lgpl", "lesser gpl", "gnu lgpl"})
+	initializeLicense("mit", "MIT License", []string{"mit"})
 }
 
-func initializeLicense(name string, possibleMatches []string) error {
-	asset := strings.ToLower(name)
-
+func initializeLicense(asset, name string, possibleMatches []string) error {
 	data := map[string]string{
 		"copyright": copyrightLine(),
 	}

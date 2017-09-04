@@ -25,26 +25,25 @@ import (
 
 var addCmd = &cobra.Command{
 	Use:   "add",
+	Short: "Add a new contract or test to the project",
+}
+
+var addContractCmd = &cobra.Command{
+	Use:   "contract",
 	Short: "Add a new contract to the project",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
-			Fatal("Must specify package name")
+			Fatal("Must specify contract name")
 		}
 
 		name := args[0]
 
-		// TODO: Allow full contract paths or detecting filenames
 		match, _ := regexp.MatchString("\\w+", name)
 		if !match {
 			Fatal("Invalid contract name specified")
 		}
 
-		wd, err := os.Getwd()
-		if err != nil {
-			Fatal(err)
-		}
-
-		project, err := FindProject(wd)
+		project, err := FindProject()
 		if err != nil {
 			Fatal(err)
 		}
@@ -53,16 +52,62 @@ var addCmd = &cobra.Command{
 	},
 }
 
+var addTestCmd = &cobra.Command{
+	Use:   "test",
+	Short: "Add a new test to the project",
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) != 1 {
+			Fatal("Must specify test name")
+		}
+
+		name := args[0]
+
+		match, _ := regexp.MatchString("\\w+", name)
+		if !match {
+			Fatal("Invalid test name specified")
+		}
+
+		project, err := FindProject()
+		if err != nil {
+			Fatal(err)
+		}
+
+		addTest(name, project)
+	},
+}
+
 func init() {
+	addCmd.AddCommand(addContractCmd)
+	addCmd.AddCommand(addTestCmd)
 	RootCmd.AddCommand(addCmd)
 }
 
 func addContract(name string, project *Project) {
 	path := filepath.Join(project.AbsPath(), ContractsDirectory, name+".sol")
 
-	data := map[string]string{"contract": name}
+	if err := os.MkdirAll(filepath.Dir(path), os.FileMode(0755)); err != nil {
+		Fatal(err)
+	}
+
+	data := project.TemplateData()
+	data["contract"] = name
 
 	if err := templates.RestoreTemplate(path, "contract/contract.sol", data); err != nil {
+		Fatal(err)
+	}
+}
+
+func addTest(name string, project *Project) {
+	path := filepath.Join(project.AbsPath(), TestsDirectory, name+".go")
+
+	if err := os.MkdirAll(filepath.Dir(path), os.FileMode(0755)); err != nil {
+		Fatal(err)
+	}
+
+	data := project.TemplateData()
+	data["test"] = name
+
+	if err := templates.RestoreTemplate(path, "test/test.go", data); err != nil {
 		Fatal(err)
 	}
 }

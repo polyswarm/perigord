@@ -85,12 +85,7 @@ func initializeProject(project *Project) {
 		Fatal("Cowardly refusing to initialize a non-empty dir")
 	}
 
-	data := map[string]string{
-		"project": project.Name(),
-		"license": project.License().Name,
-	}
-
-	if err := templates.RestoreTemplates(project.AbsPath(), "project", "project", data); err != nil {
+	if err := templates.RestoreTemplates(project.AbsPath(), "project", "project", project.TemplateData()); err != nil {
 		Fatal(err)
 	}
 }

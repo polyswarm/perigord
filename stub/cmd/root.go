@@ -39,14 +39,9 @@ func init() {
 }
 
 func initConfig() {
-	wd, err := os.Getwd()
-	if err != nil {
-		perigord.Fatal(err)
-	}
-
-	root, _ := perigord.FindRoot(wd)
-	if root != "" {
-		viper.SetConfigFile(filepath.Join(root, perigord.ProjectConfigFilename))
+	project, _ := perigord.FindProject()
+	if project != nil {
+		viper.SetConfigFile(filepath.Join(project.AbsPath(), perigord.ProjectConfigFilename))
 		if err := viper.ReadInConfig(); err != nil {
 			perigord.Fatal(err)
 		}

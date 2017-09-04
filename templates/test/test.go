@@ -6,20 +6,20 @@ import (
 	"github.com/swarmdotmarket/perigord/testing"
 )
 
-type suite struct{}
+type {{.test}} struct{}
 
-var _ = Suite(&suite{})
+var _ = Suite(&{{.test}}{})
 
-func (s *suite) SetUpTest(c *C) {
+func (s *{{.test}}) SetUpTest(c *C) {
 	testing.SetUpTest()
 }
 
-func (s *suite) TearDownTest(c *C) {
+func (s *{{.test}}) TearDownTest(c *C) {
 	testing.TearDownTest()
 }
 
 // USER TESTS GO HERE
 
-func (s *suite) TestFoo(c *C) {
+func (s *{{.test}}) TestDummy(c *C) {
 	c.Succeed()
 }

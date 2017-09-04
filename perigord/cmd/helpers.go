@@ -30,7 +30,7 @@ const (
 	BuildDirectory        = "build"
 	BindingsDirectory     = "bindings"
 	MigrationsDirectory   = "migrations"
-	TestDirectory         = "test"
+	TestsDirectory        = "tests"
 )
 
 func Fatal(v ...interface{}) {
@@ -85,7 +85,17 @@ func isEmpty(path string) bool {
 	return true
 }
 
-func FindProject(path string) (*Project, error) {
+// Public as we also run from the stub
+func FindProject() (*Project, error) {
+	wd, err := os.Getwd()
+	if err != nil {
+		return nil, err
+	}
+
+	return findProject(wd)
+}
+
+func findProject(path string) (*Project, error) {
 	if strings.HasSuffix(path, string(filepath.Separator)) {
 		return nil, errors.New("Could not find project root")
 	}
@@ -98,7 +108,7 @@ func FindProject(path string) (*Project, error) {
 		return NewProjectFromPath(path), nil
 	}
 
-	return FindProject(filepath.Dir(path))
+	return findProject(filepath.Dir(path))
 }
 
 func execWithOutput(command string, args ...string) error {
@@ -114,7 +124,7 @@ func runInRoot(f func() error) error {
 		return err
 	}
 
-	project, err := FindProject(wd)
+	project, err := findProject(wd)
 	if err != nil {
 		return err
 	}

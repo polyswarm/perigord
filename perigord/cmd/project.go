@@ -147,6 +147,7 @@ func (p *Project) SrcPath() string {
 	if p.srcPath != "" {
 		return p.srcPath
 	}
+
 	if p.absPath == "" {
 		p.srcPath = srcPaths[0]
 		return p.srcPath
@@ -162,14 +163,23 @@ func (p *Project) SrcPath() string {
 	return p.srcPath
 }
 
+func (p *Project) TemplateData() map[string]interface{} {
+	return map[string]interface{}{
+		"project":   p.Name(),
+		"license":   p.License(),
+		"copyright": copyrightLine(),
+	}
+}
+
 func filepathHasPrefix(path string, prefix string) bool {
 	if len(path) <= len(prefix) {
 		return false
 	}
+
 	if runtime.GOOS == "windows" {
 		// Paths in windows are case-insensitive.
 		return strings.EqualFold(path[0:len(prefix)], prefix)
 	}
-	return path[0:len(prefix)] == prefix
 
+	return path[0:len(prefix)] == prefix
 }

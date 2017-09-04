@@ -15,7 +15,6 @@ package cmd
 
 import (
 	"path/filepath"
-	"runtime"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -36,7 +35,6 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	cobra.OnInitialize(initGenerate)
 }
 
 func initConfig() {
@@ -46,16 +44,5 @@ func initConfig() {
 		if err := viper.ReadInConfig(); err != nil {
 			perigord.Fatal(err)
 		}
-	}
-}
-
-func initGenerate() {
-	err := perigord.RunInRoot(func() error {
-		command := runtime.GOROOT() + "/bin/go"
-		args := []string{"generate"}
-		return perigord.ExecWithOutput(command, args...)
-	})
-	if err != nil {
-		perigord.Fatal(err)
 	}
 }

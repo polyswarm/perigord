@@ -14,6 +14,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -52,6 +53,30 @@ var addContractCmd = &cobra.Command{
 	},
 }
 
+var addMigrationCmd = &cobra.Command{
+	Use:   "migration",
+	Short: "Add a new migration to the project",
+	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) != 1 {
+			Fatal("Must specify migration name")
+		}
+
+		name := args[0]
+
+		match, _ := regexp.MatchString("\\w+", name)
+		if !match {
+			Fatal("Invalid test name specified")
+		}
+
+		project, err := FindProject()
+		if err != nil {
+			Fatal(err)
+		}
+
+		addMigration(name, project)
+	},
+}
+
 var addTestCmd = &cobra.Command{
 	Use:   "test",
 	Short: "Add a new test to the project",
@@ -78,6 +103,7 @@ var addTestCmd = &cobra.Command{
 
 func init() {
 	addCmd.AddCommand(addContractCmd)
+	addCmd.AddCommand(addMigrationCmd)
 	addCmd.AddCommand(addTestCmd)
 	RootCmd.AddCommand(addCmd)
 }
@@ -95,6 +121,36 @@ func addContract(name string, project *Project) {
 	if err := templates.RestoreTemplate(path, "contract/contract.sol", data); err != nil {
 		Fatal(err)
 	}
+
+	fmt.Println("New contract added at", path)
+}
+
+func addMigration(name string, project *Project) {
+	path := filepath.Join(project.AbsPath(), MigrationsDirectory)
+	glob, err := filepath.Glob(filepath.Join(path, "*.go"))
+
+	numMigrations := 1
+	if err == nil {
+		numMigrations += len(glob)
+	}
+
+	path = filepath.Join(path, fmt.Sprintf("%d_%s.go", numMigrations, name))
+
+	fmt.Println(numMigrations, path)
+
+	if err := os.MkdirAll(filepath.Dir(path), os.FileMode(0755)); err != nil {
+		Fatal(err)
+	}
+
+	data := project.TemplateData()
+	data["migration"] = name
+	data["number"] = numMigrations
+
+	if err := templates.RestoreTemplate(path, "migration/migration.go", data); err != nil {
+		Fatal(err)
+	}
+
+	fmt.Println("New migration added at", path)
 }
 
 func addTest(name string, project *Project) {
@@ -110,4 +166,6 @@ func addTest(name string, project *Project) {
 	if err := templates.RestoreTemplate(path, "test/test.go", data); err != nil {
 		Fatal(err)
 	}
+
+	fmt.Println("New test added at", path)
 }

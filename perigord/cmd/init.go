@@ -14,6 +14,7 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -88,4 +89,6 @@ func initializeProject(project *Project) {
 	if err := templates.RestoreTemplates(project.AbsPath(), "project", "project", project.TemplateData()); err != nil {
 		Fatal(err)
 	}
+
+	fmt.Println("Project initialized in", project.AbsPath())
 }

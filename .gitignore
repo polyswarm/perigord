@@ -3,3 +3,4 @@
 templates/bindata.go
 *.swp
 *.swo
+.idea/*

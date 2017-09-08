@@ -1,6 +1,6 @@
 # Perigord: Golang Tools for Ethereum Development
 
-![Perigord Logo (not covered by LICENSE)](https://swarm.market/img/perigord-logo.jpg)
+![Perigord Logo (not covered by LICENSE)](https://swarm.market/img/perigord-logo-small.jpg)
 
 
 ## Install

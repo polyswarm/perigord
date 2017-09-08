@@ -2,9 +2,6 @@
 
 ![Perigord Logo (not covered by LICENSE)](https://swarm.market/img/perigord-logo-small.jpg)
 
-<div style="text-align:center"><img src ="https://swarm.market/img/perigord-logo-small.jpg" /></div>
-
-
 ## Install
 
 These instructions assume an Ubuntu 16.04 x86_64 environment.

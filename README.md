@@ -2,6 +2,8 @@
 
 ![Perigord Logo (not covered by LICENSE)](https://swarm.market/img/perigord-logo-small.jpg)
 
+<div style="text-align:center"><img src ="https://swarm.market/img/perigord-logo-small.jpg" /></div>
+
 
 ## Install
 

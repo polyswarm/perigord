@@ -71,25 +71,7 @@ Run for usage information:
 $ perigord
 ```
 
-### Start a New Project
+## Tutorial
 
-```
-$ perigord init myfirstdapp
-$ pushd $GOPATH/src/myfirstdapp
-```
+Refer to our introductory blog post for now: TODO
 
-### Create a Contract
-
-```
-$ perigord add contract myfirstcontract
-```
-
-
-
-### Compile (Build) Your Project
-
-TODO
-
-### Migrate (Deploy) Your Project
-
-TODO

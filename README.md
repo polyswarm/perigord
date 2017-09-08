@@ -55,9 +55,9 @@ $ go get -u gopkg.in/check.v1
 
 ```
 $ go get -u github.com/swarmdotmarket/perigord
-$ pushd $HOME/golang/src/github.com/ethereum/go-ethereum
+$ pushd $HOME/golang/src/github.com/swarmdotmarket/perigord
 $ go generate
-# pushd perigord
+$ pushd perigord
 $ go install
 $ popd
 $ popd

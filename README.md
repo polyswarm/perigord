@@ -55,9 +55,9 @@ $ go get -u gopkg.in/check.v1
 
 ```
 $ go get -u github.com/swarmdotmarket/perigord
-$ pushd $HOME/golang/src/github.com/ethereum/go-ethereum
+$ pushd $HOME/golang/src/github.com/swarmdotmarket/perigord
 $ go generate
-# pushd perigord
+$ pushd perigord
 $ go install
 $ popd
 $ popd
@@ -71,25 +71,7 @@ Run for usage information:
 $ perigord
 ```
 
-### Start a New Project
+## Tutorial
 
-```
-$ perigord init myfirstdapp
-$ pushd $GOPATH/src/myfirstdapp
-```
+Refer to our introductory blog post for now: TODO
 
-### Create a Contract
-
-```
-$ perigord add contract myfirstcontract
-```
-
-
-
-### Compile (Build) Your Project
-
-TODO
-
-### Migrate (Deploy) Your Project
-
-TODO

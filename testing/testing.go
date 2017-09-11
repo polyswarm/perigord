@@ -21,24 +21,17 @@
 package testing
 
 import (
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
+	"context"
 
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/swarmdotmarket/perigord/migration"
 )
 
-func SetUpTest() {
-	migration.RunMigrations()
+func SetUpTest() (*bind.TransactOpts, bind.ContractBackend) {
+	migration.RunMigrations(context.Background())
+	return migration.Auth(), migration.Backend()
 }
 
 func TearDownTest() {
 
-}
-
-func Auth() *bind.TransactOpts {
-	return migration.Auth()
-}
-
-func Backend() *backends.SimulatedBackend {
-	return migration.Backend()
 }

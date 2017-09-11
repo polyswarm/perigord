@@ -136,14 +136,12 @@ func addMigration(name string, project *Project) {
 
 	path = filepath.Join(path, fmt.Sprintf("%d_%s.go", numMigrations, name))
 
-	fmt.Println(numMigrations, path)
-
 	if err := os.MkdirAll(filepath.Dir(path), os.FileMode(0755)); err != nil {
 		Fatal(err)
 	}
 
 	data := project.TemplateData()
-	data["migration"] = name
+	data["contract"] = name
 	data["number"] = numMigrations
 
 	if err := templates.RestoreTemplate(path, "migration/migration.go", data); err != nil {

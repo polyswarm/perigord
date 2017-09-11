@@ -14,6 +14,7 @@
 package migration
 
 import (
+	"context"
 	"math/big"
 	"sort"
 
@@ -23,7 +24,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-type MigrationFunc func(*Migrator) error
+type MigrationFunc func(context.Context, *bind.TransactOpts, bind.ContractBackend) error
 
 type Migration struct {
 	Number int
@@ -46,7 +47,7 @@ func (s Migrations) Less(i, j int) bool {
 
 type Migrator struct {
 	auth       *bind.TransactOpts
-	backend    *backends.SimulatedBackend
+	backend    bind.ContractBackend
 	migrations Migrations
 }
 
@@ -56,7 +57,7 @@ func (m *Migrator) Auth() *bind.TransactOpts {
 	return m.auth
 }
 
-func (m *Migrator) Backend() *backends.SimulatedBackend {
+func (m *Migrator) Backend() bind.ContractBackend {
 	return m.backend
 }
 
@@ -64,21 +65,24 @@ func (m *Migrator) AddMigration(migration *Migration) {
 	m.migrations = append(m.migrations, migration)
 }
 
-func (m *Migrator) RunMigrations() error {
+func (m *Migrator) RunMigrations(ctx context.Context) error {
 	// Generate a new random account and a funded simulator
 	key, _ := crypto.GenerateKey()
-	m.auth = bind.NewKeyedTransactor(key)
-	m.backend = backends.NewSimulatedBackend(core.GenesisAlloc{m.auth.From: {Balance: big.NewInt(10000000000)}})
+	auth := bind.NewKeyedTransactor(key)
+	backend := backends.NewSimulatedBackend(core.GenesisAlloc{auth.From: {Balance: big.NewInt(10000000000)}})
+
+	m.auth = auth
+	m.backend = backend
 
 	// TODO: Check migration contract for last run and only run new
 	sort.Sort(m.migrations)
 	for _, migration := range m.migrations {
-		if err := migration.F(m); err != nil {
+		if err := migration.F(ctx, m.auth, m.backend); err != nil {
 			return err
 		}
 	}
 
-	m.backend.Commit()
+	backend.Commit()
 
 	return nil
 }
@@ -87,7 +91,7 @@ func Auth() *bind.TransactOpts {
 	return migrator.Auth()
 }
 
-func Backend() *backends.SimulatedBackend {
+func Backend() bind.ContractBackend {
 	return migrator.Backend()
 }
 
@@ -95,6 +99,6 @@ func AddMigration(migration *Migration) {
 	migrator.AddMigration(migration)
 }
 
-func RunMigrations() error {
-	return migrator.RunMigrations()
+func RunMigrations(ctx context.Context) error {
+	return migrator.RunMigrations(ctx)
 }

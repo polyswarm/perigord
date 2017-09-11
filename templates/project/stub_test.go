@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	_ "{{.project}}/tests"
+	_ "{{.project}}/migrations"
 	. "gopkg.in/check.v1"
 )
 

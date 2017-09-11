@@ -3,17 +3,25 @@ package tests
 import (
 	. "gopkg.in/check.v1"
 
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/swarmdotmarket/perigord/contract"
 	"github.com/swarmdotmarket/perigord/testing"
 
-	"{{.project}}/bindings"
+	"github.com/swarmdotmarket/token/bindings"
 )
 
-type {{.test}} struct{}
+type {{.test}} struct {
+	auth    *bind.TransactOpts
+	backend bind.ContractBackend
+}
 
 var _ = Suite(&{{.test}}{})
 
 func (s *{{.test}}) SetUpTest(c *C) {
-	testing.SetUpTest()
+	auth, backend := testing.SetUpTest()
+
+	s.auth = auth
+	s.backend = backend
 }
 
 func (s *{{.test}}) TearDownTest(c *C) {
@@ -21,7 +29,3 @@ func (s *{{.test}}) TearDownTest(c *C) {
 }
 
 // USER TESTS GO HERE
-
-func (s *{{.test}}) TestDummy(c *C) {
-	c.Succeed()
-}

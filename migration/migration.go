@@ -15,6 +15,7 @@ package migration
 
 import (
 	"context"
+	"fmt"
 	"math/big"
 	"sort"
 
@@ -77,6 +78,7 @@ func (m *Migrator) RunMigrations(ctx context.Context) error {
 	// TODO: Check migration contract for last run and only run new
 	sort.Sort(m.migrations)
 	for _, migration := range m.migrations {
+		fmt.Println("Running migration", migration.Number)
 		if err := migration.F(ctx, m.auth, m.backend); err != nil {
 			return err
 		}

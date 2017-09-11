@@ -3,10 +3,10 @@ package tests
 import (
 	. "gopkg.in/check.v1"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/swarmdotmarket/perigord/contract"
 	"github.com/swarmdotmarket/perigord/testing"
 
-	"{{.project}}/bindings"
+	"github.com/swarmdotmarket/token/bindings"
 )
 
 type foo_test struct{}
@@ -24,9 +24,13 @@ func (s *foo_test) TearDownTest(c *C) {
 // USER TESTS GO HERE
 
 func (s *foo_test) TestFoo(c *C) {
-	_, _, interactor, _ := bindings.DeployFoo(testing.Auth(), testing.Backend())
-	testing.Backend().Commit()
+	session := contract.Session("Foo")
+	c.Assert(session, NotNil)
 
-	ret, _ := interactor.Bar(&bind.CallOpts{Pending: true})
+	foo_session, ok := session.(*bindings.FooSession)
+	c.Assert(ok, Equals, true)
+	c.Assert(foo_session, NotNil)
+
+	ret, _ := foo_session.Bar()
 	c.Assert(int64(1337), Equals, ret.Int64())
 }

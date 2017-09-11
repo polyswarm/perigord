@@ -16,7 +16,6 @@ package contract
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -84,11 +83,18 @@ func Deploy(ctx context.Context, name string, auth *bind.TransactOpts, backend b
 }
 
 func Session(name string) interface{} {
-	fmt.Println(contracts)
 	contract := contracts[name]
 	if contract == nil || !contract.deployed {
 		return nil
 	}
 
 	return contract.Session
+}
+
+func Reset() {
+	for k, v := range contracts {
+		contracts[k] = &Contract{
+			deployer: v.deployer,
+		}
+	}
 }

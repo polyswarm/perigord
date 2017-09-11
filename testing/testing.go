@@ -24,6 +24,7 @@ import (
 	"context"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/swarmdotmarket/perigord/contract"
 	"github.com/swarmdotmarket/perigord/migration"
 )
 
@@ -33,5 +34,5 @@ func SetUpTest() (*bind.TransactOpts, bind.ContractBackend) {
 }
 
 func TearDownTest() {
-
+	contract.Reset()
 }

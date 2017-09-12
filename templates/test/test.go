@@ -7,7 +7,7 @@ import (
 	"github.com/swarmdotmarket/perigord/contract"
 	"github.com/swarmdotmarket/perigord/testing"
 
-	"github.com/swarmdotmarket/token/bindings"
+	"{{.project}}/bindings"
 )
 
 type {{.test}}Suite struct {

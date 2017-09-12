@@ -14,6 +14,8 @@
 package cmd
 
 import (
+	"context"
+
 	"github.com/spf13/cobra"
 
 	"github.com/swarmdotmarket/perigord/migration"
@@ -23,7 +25,7 @@ import (
 var migrateCmd = &cobra.Command{
 	Use: "migrate",
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := migration.RunMigrations(); err != nil {
+		if err := migration.RunMigrations(context.Background()); err != nil {
 			perigord.Fatal(err)
 		}
 	},

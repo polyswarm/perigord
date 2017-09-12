@@ -73,5 +73,5 @@ $ perigord
 
 ## Tutorial
 
-Refer to our introductory blog post for now: TODO
+[Refer to our introductory blog post for now.](https://medium.com/@swarmmarket/introducing-perigord-golang-tools-for-ethereum-dapp-development-60556c2d9fd)
 

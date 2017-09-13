@@ -44,6 +44,12 @@ var buildCmd = &cobra.Command{
 	Run:   compileCmd.Run,
 }
 
+var generateCmd = &cobra.Command{
+	Use:   "generate",
+	Short: "(alias for compile)",
+	Run:   compileCmd.Run,
+}
+
 func init() {
 	RootCmd.AddCommand(compileCmd)
 	RootCmd.AddCommand(buildCmd)

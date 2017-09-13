@@ -14,7 +14,9 @@
 package cmd
 
 import (
+	"errors"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -53,6 +55,7 @@ var generateCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(compileCmd)
 	RootCmd.AddCommand(buildCmd)
+	RootCmd.AddCommand(generateCmd)
 }
 
 func compileContracts() error {
@@ -63,7 +66,9 @@ func compileContracts() error {
 	}
 
 	for _, match := range matches {
-		compileContract(match)
+		if err := compileContract(match); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -72,7 +77,13 @@ func compileContracts() error {
 func compileContract(path string) error {
 	// TODO: This just shells out atm, could directly integrate abigen and call
 	// into it as a library later
+
 	command := "solc"
+	_, err := exec.LookPath(command)
+	if err != nil {
+		return errors.New("Can't locate solc, is it installed and in your path")
+	}
+
 	args := []string{path, "--bin", "--abi", "--optimize", "--overwrite", "-o", BuildDirectory}
 	return ExecWithOutput(command, args...)
 }
@@ -88,7 +99,9 @@ func generateBindings() error {
 	}
 
 	for _, match := range matches {
-		generateBinding(strings.TrimSuffix(match, filepath.Ext(match)))
+		if err := generateBinding(strings.TrimSuffix(match, filepath.Ext(match))); err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -97,6 +110,11 @@ func generateBindings() error {
 func generateBinding(path string) error {
 	// TODO: Allow alternate binding directories / package names, in config file
 	command := "abigen"
+	_, err := exec.LookPath(command)
+	if err != nil {
+		return errors.New("Can't locate abigen, is it installed and in your path")
+	}
+
 	name := filepath.Base(path)
 	abifile := path + ".abi"
 	binfile := path + ".bin"

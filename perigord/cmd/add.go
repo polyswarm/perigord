@@ -118,7 +118,7 @@ func addContract(name string, project *Project) {
 	data := project.TemplateData()
 	data["contract"] = name
 
-	if err := templates.RestoreTemplate(path, "contract/contract.sol", data); err != nil {
+	if err := templates.RestoreTemplate(path, "contract/contract.sol.tpl", data); err != nil {
 		Fatal(err)
 	}
 
@@ -144,7 +144,7 @@ func addMigration(name string, project *Project) {
 	data["contract"] = name
 	data["number"] = numMigrations
 
-	if err := templates.RestoreTemplate(path, "migration/migration.go", data); err != nil {
+	if err := templates.RestoreTemplate(path, "migration/migration.go.tpl", data); err != nil {
 		Fatal(err)
 	}
 
@@ -161,7 +161,7 @@ func addTest(name string, project *Project) {
 	data := project.TemplateData()
 	data["test"] = name
 
-	if err := templates.RestoreTemplate(path, "test/test.go", data); err != nil {
+	if err := templates.RestoreTemplate(path, "test/test.go.tpl", data); err != nil {
 		Fatal(err)
 	}
 

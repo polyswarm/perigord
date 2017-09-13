@@ -91,6 +91,10 @@ func RestoreTemplates(dir, name, prefix string, data interface{}) error {
 	children, err := AssetDir(name)
 
 	if err != nil {
+		if filepath.Ext(filename) == ".tpl" {
+			filename = strings.TrimSuffix(filename, filepath.Ext(filename))
+		}
+
 		return RestoreTemplate(filepath.Join(dir, filename), name, data)
 	}
 

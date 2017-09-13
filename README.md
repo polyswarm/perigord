@@ -6,7 +6,7 @@ This image is not covered by LICENSE.
 
 ## Install
 
-These instructions assume an Ubuntu 16.04 x86_64 environment.
+These instructions assume an Ubuntu 16.04 x86\_64 environment.
 
 ### Prerequisite: Golang 1.8
 
@@ -37,29 +37,25 @@ $ sudo apt-get install -y solc
 
 ```
 $ go get github.com/ethereum/go-ethereum
-$ pushd $HOME/golang/src/github.com/ethereum/go-ethereum
+$ pushd $GOPATH/src/github.com/ethereum/go-ethereum
 $ go install ./cmd/abigen
 $ popd
 ```
 
-### Perigord Dependencies
+### Build Dependency: `go-bindata`
 
 ```
 $ go get -u github.com/jteeuwen/go-bindata/...
-$ go get -u github.com/spf13/cobra
-$ go get -u github.com/spf13/viper
-$ go get -u gopkg.in/check.v1
 ```
 
 ## Setup
 
 ```
-$ go get -u github.com/swarmdotmarket/perigord
-$ pushd $HOME/golang/src/github.com/swarmdotmarket/perigord
+$ go get -u github.com/swarmdotmarket/perigord/...
+$ pushd $GOPATH/src/github.com/swarmdotmarket/perigord
 $ go generate
-$ pushd perigord
+$ cd perigord
 $ go install
-$ popd
 $ popd
 ```
 

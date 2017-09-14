@@ -6,6 +6,15 @@ This image is not covered by LICENSE.
 
 ## Install
 
+There is a Dockerfile in `docker/Dockerfile` to build a perigord image, to build
+run
+
+```
+$ pushd docker
+$ docker build -t perigord .
+$ popd
+```
+
 These instructions assume an Ubuntu 16.04 x86\_64 environment.
 
 ### Prerequisite: Golang 1.8

@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"fmt"
 )
 
 var compileCmd = &cobra.Command{
@@ -60,7 +61,14 @@ func init() {
 
 func compileContracts() error {
 	// TODO: Figure out relative imports and if we need to do anything else here
-	matches, err := filepath.Glob(ContractsDirectory + "/*.sol")
+	matches := make([]string, 0)
+	err := filepath.Walk(ContractsDirectory, func(path string, f os.FileInfo, err error) error {
+		if strings.HasSuffix(path, ".sol") {
+			matches = append(matches, path)
+		}
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
@@ -84,7 +92,13 @@ func compileContract(path string) error {
 		return errors.New("Can't locate solc, is it installed and in your path")
 	}
 
-	args := []string{path, "--bin", "--abi", "--optimize", "--overwrite", "-o", BuildDirectory}
+	dir, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	// solc does not currently support relative paths: https://github.com/ethereum/solidity/issues/2928
+	args := []string{path, "--allow-paths", fmt.Sprintf("%s/%s", dir, ContractsDirectory), "--bin", "--abi", "--optimize", "--overwrite", "-o", BuildDirectory}
 	return ExecWithOutput(command, args...)
 }
 

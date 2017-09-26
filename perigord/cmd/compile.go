@@ -15,7 +15,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -101,7 +100,7 @@ func compileContract(path string) error {
 	}
 
 	// solc does not currently support relative paths: https://github.com/ethereum/solidity/issues/2928
-	args := []string{path, "--allow-paths", fmt.Sprintf("%s/%s", dir, ContractsDirectory), "--bin", "--abi", "--optimize", "--overwrite", "-o", BuildDirectory}
+	args := []string{path, "--allow-paths", filepath.Join(dir, ContractsDirectory), "--bin", "--abi", "--optimize", "--overwrite", "-o", BuildDirectory}
 	return ExecWithOutput(command, args...)
 }
 

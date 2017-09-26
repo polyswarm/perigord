@@ -15,13 +15,13 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
-	"fmt"
 )
 
 var compileCmd = &cobra.Command{
@@ -63,6 +63,9 @@ func compileContracts() error {
 	// TODO: Figure out relative imports and if we need to do anything else here
 	matches := make([]string, 0)
 	err := filepath.Walk(ContractsDirectory, func(path string, f os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
 		if strings.HasSuffix(path, ".sol") {
 			matches = append(matches, path)
 		}

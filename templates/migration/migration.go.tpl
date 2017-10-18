@@ -16,15 +16,11 @@ import (
 
 type {{.contract}}Deployer struct{}
 
-func (d *{{.contract}}Deployer) Deploy(ctx context.Context, auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, interface{}, error) {
-	address, transaction, contract, err := bindings.Deploy{{.contract}}(auth, backend)
+func (d *{{.contract}}Deployer) Deploy(ctx context.Context, network *migration.Network) (common.Address, *types.Transaction, interface{}, error) {
+    auth := network.NewTransactor(0)
+	address, transaction, contract, err := bindings.Deploy{{.contract}}(auth, network.Backend())
 	if err != nil {
 		return common.Address{}, nil, nil, err
-	}
-
-	val, ok := backend.(*backends.SimulatedBackend)
-	if ok {
-		val.Commit()
 	}
 
 	session := &bindings.{{.contract}}Session{
@@ -38,8 +34,9 @@ func (d *{{.contract}}Deployer) Deploy(ctx context.Context, auth *bind.TransactO
 	return address, transaction, session, nil
 }
 
-func (d *{{.contract}}Deployer) Bind(ctx context.Context, auth *bind.TransactOpts, backend bind.ContractBackend, address common.Address) (interface{}, error) {
-	contract, err := bindings.New{{.contract}}(address, backend)
+func (d *{{.contract}}Deployer) Bind(ctx context.Context, network *migration.Network, address common.Address) (interface{}, error) {
+    auth := network.NewTransactor(0)
+	contract, err := bindings.New{{.contract}}(address, network.Backend())
 	if err != nil {
 		return nil, err
 	}
@@ -60,8 +57,8 @@ func init() {
 
 	migration.AddMigration(&migration.Migration{
 		Number: {{.number}},
-		F: func(ctx context.Context, auth *bind.TransactOpts, backend bind.ContractBackend) error {
-			if err := contract.Deploy(ctx, "{{.contract}}", auth, backend); err != nil {
+		F: func(ctx context.Context, network *migration.Network) error {
+			if err := contract.Deploy(ctx, "{{.contract}}", network); err != nil {
 				return err
 			}
 

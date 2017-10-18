@@ -20,11 +20,13 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+
+	"github.com/swarmdotmarket/perigord/migration"
 )
 
 type ContractDeployer interface {
-	Deploy(context.Context, *bind.TransactOpts, bind.ContractBackend) (common.Address, *types.Transaction, interface{}, error)
-	Bind(context.Context, *bind.TransactOpts, bind.ContractBackend, common.Address) (interface{}, error)
+	Deploy(context.Context, *migration.Network) (common.Address, *types.Transaction, interface{}, error)
+	Bind(context.Context, *migration.Network, common.Address) (interface{}, error)
 }
 
 type Contract struct {
@@ -34,15 +36,15 @@ type Contract struct {
 	deployer ContractDeployer
 }
 
-func (c *Contract) Deploy(ctx context.Context, auth *bind.TransactOpts, backend bind.ContractBackend) error {
+func (c *Contract) Deploy(ctx context.Context, network *migration.Network) error {
 	// TODO: Is this the correct behavior?
 	if !c.deployed {
-		address, transaction, session, err := c.deployer.Deploy(ctx, auth, backend)
+		address, transaction, session, err := c.deployer.Deploy(ctx, network)
 		if err != nil {
 			return err
 		}
 
-		deployBackend, ok := backend.(bind.DeployBackend)
+		deployBackend, ok := network.Backend().(bind.DeployBackend)
 		if ok {
 			address, err = bind.WaitDeployed(ctx, deployBackend, transaction)
 			if err != nil {
@@ -55,7 +57,7 @@ func (c *Contract) Deploy(ctx context.Context, auth *bind.TransactOpts, backend 
 		c.deployed = true
 		return nil
 	} else {
-		session, err := c.deployer.Bind(ctx, auth, backend, c.Address)
+		session, err := c.deployer.Bind(ctx, network, c.Address)
 		if err != nil {
 			return err
 		}
@@ -73,13 +75,13 @@ func AddContract(name string, deployer ContractDeployer) {
 	}
 }
 
-func Deploy(ctx context.Context, name string, auth *bind.TransactOpts, backend bind.ContractBackend) error {
+func Deploy(ctx context.Context, name string, network *migration.Network) error {
 	contract := contracts[name]
 	if contract == nil {
 		return errors.New("No such contract found")
 	}
 
-	return contract.Deploy(ctx, auth, backend)
+	return contract.Deploy(ctx, network)
 }
 
 func Session(name string) interface{} {

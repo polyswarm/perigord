@@ -17,7 +17,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 
@@ -37,20 +36,14 @@ type Contract struct {
 }
 
 func (c *Contract) Deploy(ctx context.Context, network *migration.Network) error {
-	// TODO: Is this the correct behavior?
 	if !c.deployed {
-		address, transaction, session, err := c.deployer.Deploy(ctx, network)
+		address, _, session, err := c.deployer.Deploy(ctx, network)
 		if err != nil {
 			return err
 		}
 
-		deployBackend, ok := network.Backend().(bind.DeployBackend)
-		if ok {
-			address, err = bind.WaitDeployed(ctx, deployBackend, transaction)
-			if err != nil {
-				return err
-			}
-		}
+		// TODO: Do we need to WaitDeployed? Seems to hang forever on both geth
+		// and testrpc
 
 		c.Address = address
 		c.Session = session

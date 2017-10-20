@@ -28,7 +28,6 @@ var networks map[string]string
 
 func InitNetworks() {
 	networks = viper.GetStringMapString("networks")
-	fmt.Println(networks)
 }
 
 type Network struct {
@@ -49,7 +48,6 @@ func Dial(name string) (*Network, error) {
 
 		var accounts []common.Address
 		rpc_client.Call(&accounts, "eth_accounts")
-		fmt.Println(accounts, len(accounts))
 
 		ret := &Network{rpc_client, client, accounts}
 
@@ -59,7 +57,7 @@ func Dial(name string) (*Network, error) {
 	return nil, errors.New("No such network " + name)
 }
 
-func (n *Network) Backend() bind.ContractBackend {
+func (n *Network) Backend() *ethclient.Client {
 	return n.client
 }
 

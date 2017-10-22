@@ -39,7 +39,7 @@ const (
 	ProjectConfigFilename = "perigord.yaml"
 	ContractsDirectory    = "contracts"
 	BuildDirectory        = "build"
-	BindingsDirectory     = viper.GetString("pkg")
+	BindingsDirectory     = "bindings"
 	MigrationsDirectory   = "migrations"
 	TestsDirectory        = "tests"
 )

@@ -21,6 +21,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var compileCmd = &cobra.Command{
@@ -134,7 +135,8 @@ func generateBinding(path string) error {
 	name := filepath.Base(path)
 	abifile := path + ".abi"
 	binfile := path + ".bin"
+	pkg := viper.GetString("pkg")
 	outfile := filepath.Join(BindingsDirectory, filepath.Base(name)) + ".go"
-	args := []string{"--abi", abifile, "--bin", binfile, "--pkg", "bindings", "--type", name, "--out", outfile}
+	args := []string{"--abi", abifile, "--bin", binfile, "--pkg", pkg, "--type", name, "--out", outfile}
 	return ExecWithOutput(command, args...)
 }

@@ -46,6 +46,8 @@ func initConfig() {
 		viper.SetConfigFile(filepath.Join(project.AbsPath(), ProjectConfigFilename))
 		if err := viper.ReadInConfig(); err != nil {
 			Fatal(err)
+
+		viper.SetDefault("pkg", "bindings")
 		}
 	}
 }

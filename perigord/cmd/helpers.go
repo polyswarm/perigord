@@ -22,13 +22,15 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/spf13/viper"
 )
 
 const (
 	ProjectConfigFilename = "perigord.yaml"
 	ContractsDirectory    = "contracts"
 	BuildDirectory        = "build"
-	BindingsDirectory     = "bindings"
+	BindingsDirectory     = viper.GetString("pkg")
 	MigrationsDirectory   = "migrations"
 	TestsDirectory        = "tests"
 )

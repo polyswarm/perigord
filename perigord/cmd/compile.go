@@ -60,6 +60,7 @@ func init() {
 
 func compileContracts() error {
 	// TODO: Figure out relative imports and if we need to do anything else here
+	InitializeConfigs()
 	matches := make([]string, 0)
 	err := filepath.Walk(ContractsDirectory, func(path string, f os.FileInfo, err error) error {
 		if err != nil {
@@ -100,17 +101,21 @@ func compileContract(path string) error {
 	}
 
 	// solc does not currently support relative paths: https://github.com/ethereum/solidity/issues/2928
-	args := []string{path, "--allow-paths", filepath.Join(dir, ContractsDirectory), "--bin", "--abi", "--optimize", "--overwrite", "-o", BuildDirectory}
+	args := []string{path, "--allow-paths", filepath.Join(dir, ContractsDirectory), "--bin", "--abi", "--optimize", "--overwrite", "-o", Config["buildDir"]}
 	return ExecWithOutput(command, args...)
 }
 
 func generateBindings() error {
-	matches, err := filepath.Glob(BuildDirectory + "/*.abi")
+	matches, err := filepath.Glob(Config["buildDir"] + "/*.abi")
 	if err != nil {
 		return err
 	}
 
-	if err := os.MkdirAll(BindingsDirectory, os.FileMode(0755)); err != nil {
+	if err := os.MkdirAll(Config["buildDir"], os.FileMode(0755)); err != nil {
+		return err
+	}
+
+	if err := os.MkdirAll(Config["bindingsDir"], os.FileMode(0755)); err != nil {
 		return err
 	}
 
@@ -127,14 +132,15 @@ func generateBinding(path string) error {
 	// TODO: Allow alternate binding directories / package names, in config file
 	command := "abigen"
 	_, err := exec.LookPath(command)
+
 	if err != nil {
-		return errors.New("Can't locate abigen, is it installed and in your path")
+		return err
 	}
 
 	name := filepath.Base(path)
 	abifile := path + ".abi"
 	binfile := path + ".bin"
-	outfile := filepath.Join(BindingsDirectory, filepath.Base(name)) + ".go"
-	args := []string{"--abi", abifile, "--bin", binfile, "--pkg", "bindings", "--type", name, "--out", outfile}
+	outfile := filepath.Join(Config["bindingsDir"], filepath.Base(name)) + ".go"
+	args := []string{"--abi", abifile, "--bin", binfile, "--pkg", Config["pkg"], "--type", name, "--out", outfile}
 	return ExecWithOutput(command, args...)
 }

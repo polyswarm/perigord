@@ -22,8 +22,19 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/spf13/viper"
 )
 
+var Config = make(map[string]string)
+
+var defaultConfig = map[string]string{
+	"pkg": "bindings",
+	"buildDir": "build",
+	"bindingsDir": "bindings",
+}
+
+// TODO: some of this data is no longer needed.  Should eventually be replaced
 const (
 	ProjectConfigFilename = "perigord.yaml"
 	ContractsDirectory    = "contracts"
@@ -32,6 +43,20 @@ const (
 	MigrationsDirectory   = "migrations"
 	TestsDirectory        = "tests"
 )
+
+func InitializeConfigs () {
+	initializeConfig("pkg")
+	initializeConfig("buildDir")
+	initializeConfig("bindingsDir")
+}
+
+func initializeConfig (key string) {
+	if viper.GetString(key) == "" {
+		Config[key] = defaultConfig[key]
+	} else {
+		Config[key] = viper.GetString(key)
+	}
+}
 
 func Fatal(v ...interface{}) {
 	fmt.Println("Error:", v)

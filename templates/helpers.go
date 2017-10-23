@@ -48,7 +48,7 @@ func ExecuteTemplate(name string, data interface{}) (*bytes.Buffer, error) {
 		return nil, err
 	}
 
-	tpl, err := template.New("").Funcs(template.FuncMap{"comment": commentifyString}).Parse(string(asset))
+	tpl, err := template.New("").Funcs(template.FuncMap{"comment": commentifyString, "basename": filepath.Base}).Parse(string(asset))
 	if err != nil {
 		return nil, err
 	}

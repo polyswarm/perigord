@@ -118,6 +118,21 @@ func ExecWithOutput(command string, args ...string) error {
 	return cmd.Run()
 }
 
+func ExecWithPipes(command string, in []byte, args ...string) ([]byte, error) {
+	cmd := exec.Command(command, args...)
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		defer stdin.Close()
+		stdin.Write(in)
+	}()
+
+	return cmd.CombinedOutput()
+}
+
 func RunInRoot(f func() error) error {
 	wd, err := os.Getwd()
 	if err != nil {

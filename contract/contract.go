@@ -20,7 +20,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/swarmdotmarket/perigord/migration"
+	"github.com/polyswarm/perigord/migration"
 )
 
 type ContractDeployer interface {

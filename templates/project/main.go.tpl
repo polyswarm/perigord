@@ -4,7 +4,7 @@ package main
 import (
 	"context"
 
-	"github.com/swarmdotmarket/perigord/migration"
+	"github.com/polyswarm/perigord/migration"
 
 	_ "{{.project}}/migrations"
 )

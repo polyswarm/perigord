@@ -1,4 +1,4 @@
-// Copyright © 2017 Swarm Market <info@swarm.market>
+// Copyright © 2017 PolySwarm <info@polyswarm.io>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@ import (
 	"context"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/swarmdotmarket/perigord/contract"
-	"github.com/swarmdotmarket/perigord/migration"
+	"github.com/polyswarm/perigord/contract"
+	"github.com/polyswarm/perigord/migration"
 )
 
 func SetUpTest() (*bind.TransactOpts, bind.ContractBackend) {

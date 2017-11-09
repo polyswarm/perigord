@@ -22,8 +22,8 @@ RUN set -x && \
     cd $GOPATH/src/github.com/ethereum/go-ethereum/cmd/abigen && \
     go install && \
     go get -u github.com/jteeuwen/go-bindata/... && \
-    (go get -u github.com/swarmdotmarket/perigord/... || true) && \
-    cd $GOPATH/src/github.com/swarmdotmarket/perigord && \
+    (go get -u github.com/polyswarm/perigord/... || true) && \
+    cd $GOPATH/src/github.com/polyswarm/perigord && \
     go generate && \
     cd perigord && \
     go install

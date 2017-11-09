@@ -3,8 +3,8 @@ package tests
 import (
 	. "gopkg.in/check.v1"
 
-	"github.com/swarmdotmarket/perigord/contract"
-	"github.com/swarmdotmarket/perigord/testing"
+	"github.com/polyswarm/perigord/contract"
+	"github.com/polyswarm/perigord/testing"
 
 	"{{.project}}/bindings"
 )

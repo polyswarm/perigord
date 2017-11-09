@@ -1,4 +1,4 @@
-// Copyright © 2017 Swarm Market <info@swarm.market>
+// Copyright © 2017 PolySwarm <info@polyswarm.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ import (
 	"runtime"
 
 	"github.com/spf13/cobra"
-	perigord "github.com/swarmdotmarket/perigord/perigord/cmd"
+	perigord "github.com/polyswarm/perigord/perigord/cmd"
 )
 
 var testCmd = &cobra.Command{

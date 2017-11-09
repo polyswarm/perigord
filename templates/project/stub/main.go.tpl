@@ -4,7 +4,7 @@ package main
 
 import (
 	_ "{{.project}}/migrations"
-	"github.com/swarmdotmarket/perigord/stub"
+	"github.com/polyswarm/perigord/stub"
 )
 
 func main() {

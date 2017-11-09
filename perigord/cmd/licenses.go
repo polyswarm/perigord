@@ -1,5 +1,5 @@
 // Copyright © 2015 Steve Francia <spf@spf13.com>.
-// Modifications Copyright © 2017 Swarm Market <info@swarm.market>
+// Modifications Copyright © 2017 PolySwarm <info@polyswarm.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import (
 
 	"github.com/spf13/viper"
 
-	"github.com/swarmdotmarket/perigord/templates"
+	"github.com/polyswarm/perigord/templates"
 )
 
 // Licenses contains all possible licenses a user can choose from.

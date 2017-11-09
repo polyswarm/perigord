@@ -1,6 +1,6 @@
 # Perigord: Golang Tools for Ethereum Development
 
-![Perigord Image (not covered by LICENSE)](https://swarm.market/img/perigord-logo-small.jpg)
+![Perigord Image (not covered by LICENSE)](https://polyswarm.io/img/perigord-logo-small.jpg)
 
 This image is not covered by LICENSE. 
 
@@ -60,8 +60,8 @@ $ go get -u github.com/jteeuwen/go-bindata/...
 ## Setup
 
 ```
-$ go get -u github.com/swarmdotmarket/perigord/...
-$ pushd $GOPATH/src/github.com/swarmdotmarket/perigord
+$ go get -u github.com/polyswarm/perigord/...
+$ pushd $GOPATH/src/github.com/polyswarm/perigord
 $ go generate
 $ cd perigord
 $ go install

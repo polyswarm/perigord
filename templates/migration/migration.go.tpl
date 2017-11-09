@@ -8,8 +8,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/swarmdotmarket/perigord/contract"
-	"github.com/swarmdotmarket/perigord/migration"
+	"github.com/polyswarm/perigord/contract"
+	"github.com/polyswarm/perigord/migration"
 
 	"{{.project}}/bindings"
 )

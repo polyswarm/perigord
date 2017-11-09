@@ -1,4 +1,4 @@
-// Copyright © 2017 Swarm Market <info@swarm.market>
+// Copyright © 2017 PolySwarm <info@polyswarm.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/swarmdotmarket/perigord/templates"
+	"github.com/polyswarm/perigord/templates"
 )
 
 var initCmd = &cobra.Command{
@@ -32,7 +32,7 @@ and the appropriate structure for a perigord-based project.
   * If a name is provided, it will be created in the current directory;
   * If no name is provided, the current directory will be assumed;
   * If a relative path is provided, it will be created inside $GOPATH
-    (e.g. github.com/swarmdotmarket/perigord);
+    (e.g. github.com/polyswarm/perigord);
   * If an absolute path is provided, it will be created;
   * If the directory already exists but is empty, it will be used.
 

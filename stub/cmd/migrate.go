@@ -1,4 +1,4 @@
-// Copyright © 2017 Swarm Market <info@swarm.market>
+// Copyright © 2017 PolySwarm <info@polyswarm.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/swarmdotmarket/perigord/migration"
-	perigord "github.com/swarmdotmarket/perigord/perigord/cmd"
+	"github.com/polyswarm/perigord/migration"
+	perigord "github.com/polyswarm/perigord/perigord/cmd"
 )
 
 var migrateCmd = &cobra.Command{

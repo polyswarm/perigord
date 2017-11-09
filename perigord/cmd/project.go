@@ -1,5 +1,5 @@
 // Copyright © 2015 Steve Francia <spf@spf13.com>.
-// Modifications Copyright © 2017 Swarm Market <info@swarm.market>
+// Modifications Copyright © 2017 PolySwarm <info@polyswarm.io>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.

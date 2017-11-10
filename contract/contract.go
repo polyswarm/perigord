@@ -43,9 +43,12 @@ func (c *Contract) Deploy(ctx context.Context, network *migration.Network) error
 			return err
 		}
 
-		// TODO: Do we need to WaitDeployed? Seems to hang forever on both geth
-		// and testrpc
-		time.Sleep(5 * time.Second)
+		backend := network.Backend()
+		code, err := backend.CodeAt(ctx, address, nil)
+		for err != nil || len(code) == 0 {
+			time.Sleep(time.Second)
+			code, err = backend.CodeAt(ctx, address, nil)
+		}
 
 		c.Address = address
 		c.Session = session

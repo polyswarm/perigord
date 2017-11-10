@@ -15,7 +15,6 @@ package migration
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"

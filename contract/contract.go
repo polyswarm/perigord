@@ -16,6 +16,7 @@ package contract
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -44,6 +45,7 @@ func (c *Contract) Deploy(ctx context.Context, network *migration.Network) error
 
 		// TODO: Do we need to WaitDeployed? Seems to hang forever on both geth
 		// and testrpc
+		time.Sleep(5 * time.Second)
 
 		c.Address = address
 		c.Session = session

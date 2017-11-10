@@ -22,15 +22,39 @@ package testing
 
 import (
 	"context"
+	"errors"
+	"path/filepath"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/spf13/viper"
+
 	"github.com/polyswarm/perigord/contract"
 	"github.com/polyswarm/perigord/migration"
+	perigord "github.com/polyswarm/perigord/perigord/cmd"
 )
 
-func SetUpTest() (*bind.TransactOpts, bind.ContractBackend) {
-	migration.RunMigrations(context.Background())
-	return migration.Auth(), migration.Backend()
+func SetUpTest() (*migration.Network, error) {
+	project, _ := perigord.FindProject()
+	if project == nil {
+		return nil, errors.New("Could not find project")
+	}
+
+	viper.SetConfigFile(filepath.Join(project.AbsPath(), perigord.ProjectConfigFilename))
+	if err := viper.ReadInConfig(); err != nil {
+		return nil, err
+	}
+
+	migration.InitNetworks()
+	// TODO: Fix this in config
+	network, err := migration.Dial("dev")
+	if err != nil {
+		return nil, err
+	}
+
+	if err := migration.RunMigrations(context.Background(), network); err != nil {
+		return nil, err
+	}
+
+	return network, nil
 }
 
 func TearDownTest() {

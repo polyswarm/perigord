@@ -47,11 +47,11 @@ func (c *Contract) Deploy(ctx context.Context, network *migration.Network) error
 			return err
 		}
 
-		backend := network.Backend()
-		code, err := backend.CodeAt(ctx, address, nil)
+		client := network.Client()
+		code, err := client.CodeAt(ctx, address, nil)
 		for err != nil || len(code) == 0 {
 			time.Sleep(time.Second)
-			code, err = backend.CodeAt(ctx, address, nil)
+			code, err = client.CodeAt(ctx, address, nil)
 		}
 
 		c.Address = address
@@ -155,7 +155,7 @@ func Reset() {
 func AddressOf(name string) common.Address {
 	contract := contracts[name]
 	if contract == nil || !contract.deployed {
-		contract.Address{}
+		return common.Address{}
 	}
 
 	return contract.Address

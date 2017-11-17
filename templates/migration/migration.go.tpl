@@ -17,7 +17,7 @@ type {{.contract}}Deployer struct{}
 
 func (d *{{.contract}}Deployer) Deploy(ctx context.Context, network *migration.Network) (common.Address, *types.Transaction, interface{}, error) {
     auth := network.NewTransactor(0)
-	address, transaction, contract, err := bindings.Deploy{{.contract}}(auth, network.Backend())
+	address, transaction, contract, err := bindings.Deploy{{.contract}}(auth, network.Client())
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
@@ -35,7 +35,7 @@ func (d *{{.contract}}Deployer) Deploy(ctx context.Context, network *migration.N
 
 func (d *{{.contract}}Deployer) Bind(ctx context.Context, network *migration.Network, address common.Address) (interface{}, error) {
     auth := network.NewTransactor(0)
-	contract, err := bindings.New{{.contract}}(address, network.Backend())
+	contract, err := bindings.New{{.contract}}(address, network.Client())
 	if err != nil {
 		return nil, err
 	}

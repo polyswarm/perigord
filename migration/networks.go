@@ -61,11 +61,11 @@ func (n *Network) Name() string {
 	return n.name
 }
 
-func (n *Network) Backend() *ethclient.Client {
+func (n *Network) Client() *ethclient.Client {
 	return n.client
 }
 
-func (n *Network) RpcBackend() *rpc.Client {
+func (n *Network) RpcClient() *rpc.Client {
 	return n.rpc_client
 }
 

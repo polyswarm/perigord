@@ -39,8 +39,8 @@ func init() {
 }
 
 func initConfig() {
-	prj, _ := project.FindProject()
-	if prj != nil {
+	prj, err := project.FindProject()
+	if prj != nil && err == nil {
 		viper.SetConfigFile(filepath.Join(prj.AbsPath(), project.ProjectConfigFilename))
 		if err := viper.ReadInConfig(); err != nil {
 			perigord.Fatal(err)

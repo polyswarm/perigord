@@ -29,16 +29,16 @@ import (
 
 	"github.com/polyswarm/perigord/contract"
 	"github.com/polyswarm/perigord/migration"
-	perigord "github.com/polyswarm/perigord/perigord/cmd"
+	"github.com/polyswarm/perigord/project"
 )
 
 func SetUpTest() (*migration.Network, error) {
-	project, _ := perigord.FindProject()
-	if project == nil {
+	prj, err := project.FindProject()
+	if err != nil {
 		return nil, errors.New("Could not find project")
 	}
 
-	viper.SetConfigFile(filepath.Join(project.AbsPath(), perigord.ProjectConfigFilename))
+	viper.SetConfigFile(filepath.Join(prj.AbsPath(), project.ProjectConfigFilename))
 	if err := viper.ReadInConfig(); err != nil {
 		return nil, err
 	}

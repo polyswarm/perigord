@@ -30,6 +30,7 @@ func InitNetworks() {
 }
 
 type Network struct {
+	name       string
 	rpc_client *rpc.Client
 	client     *ethclient.Client
 	accounts   []common.Address
@@ -48,7 +49,7 @@ func Dial(name string) (*Network, error) {
 		var accounts []common.Address
 		rpc_client.Call(&accounts, "eth_accounts")
 
-		ret := &Network{rpc_client, client, accounts}
+		ret := &Network{name, rpc_client, client, accounts}
 
 		return ret, nil
 	}
@@ -56,8 +57,16 @@ func Dial(name string) (*Network, error) {
 	return nil, errors.New("No such network " + name)
 }
 
+func (n *Network) Name() string {
+	return n.name
+}
+
 func (n *Network) Backend() *ethclient.Client {
 	return n.client
+}
+
+func (n *Network) RpcBackend() *rpc.Client {
+	return n.rpc_client
 }
 
 func (n *Network) NewTransactor(account uint) *bind.TransactOpts {

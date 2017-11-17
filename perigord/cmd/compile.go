@@ -20,6 +20,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/polyswarm/perigord/project"
 	"github.com/spf13/cobra"
 )
 
@@ -61,7 +62,7 @@ func init() {
 func compileContracts() error {
 	// TODO: Figure out relative imports and if we need to do anything else here
 	matches := make([]string, 0)
-	err := filepath.Walk(ContractsDirectory, func(path string, f os.FileInfo, err error) error {
+	err := filepath.Walk(project.ContractsDirectory, func(path string, f os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -100,17 +101,18 @@ func compileContract(path string) error {
 	}
 
 	// solc does not currently support relative paths: https://github.com/ethereum/solidity/issues/2928
-	args := []string{path, "--allow-paths", filepath.Join(dir, ContractsDirectory), "--bin", "--abi", "--optimize", "--overwrite", "-o", BuildDirectory}
+	args := []string{path, "--allow-paths", filepath.Join(dir, project.ContractsDirectory),
+		"--bin", "--abi", "--optimize", "--overwrite", "-o", project.BuildDirectory}
 	return ExecWithOutput(command, args...)
 }
 
 func generateBindings() error {
-	matches, err := filepath.Glob(BuildDirectory + "/*.abi")
+	matches, err := filepath.Glob(project.BuildDirectory + "/*.abi")
 	if err != nil {
 		return err
 	}
 
-	if err := os.MkdirAll(BindingsDirectory, os.FileMode(0755)); err != nil {
+	if err := os.MkdirAll(project.BindingsDirectory, os.FileMode(0755)); err != nil {
 		return err
 	}
 
@@ -134,7 +136,7 @@ func generateBinding(path string) error {
 	name := filepath.Base(path)
 	abifile := path + ".abi"
 	binfile := path + ".bin"
-	outfile := filepath.Join(BindingsDirectory, filepath.Base(name)) + ".go"
+	outfile := filepath.Join(project.BindingsDirectory, filepath.Base(name)) + ".go"
 	args := []string{"--abi", abifile, "--bin", binfile, "--pkg", "bindings", "--type", name, "--out", outfile}
 	return ExecWithOutput(command, args...)
 }

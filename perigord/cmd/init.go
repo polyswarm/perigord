@@ -18,9 +18,10 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/polyswarm/perigord/project"
+	"github.com/polyswarm/perigord/templates"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/polyswarm/perigord/templates"
 )
 
 var initCmd = &cobra.Command{
@@ -44,24 +45,24 @@ Init will not use an existing directory with contents.`,
 			Fatal(err)
 		}
 
-		var project *Project
+		var prj *project.Project
 		if len(args) == 0 {
-			project = NewProjectFromPath(wd)
+			prj = project.NewProjectFromPath(wd)
 		} else if len(args) == 1 {
 			arg := args[0]
 			if arg[0] == '.' {
 				arg = filepath.Join(wd, arg)
 			}
 			if filepath.IsAbs(arg) {
-				project = NewProjectFromPath(arg)
+				prj = project.NewProjectFromPath(arg)
 			} else {
-				project = NewProject(arg)
+				prj = project.NewProject(arg)
 			}
 		} else {
 			Fatal("please provide only one argument")
 		}
 
-		initializeProject(project)
+		initializeProject(prj)
 	},
 }
 
@@ -77,25 +78,25 @@ func init() {
 	viper.SetDefault("license", "apache")
 }
 
-func initializeProject(project *Project) {
-	if err := os.MkdirAll(project.AbsPath(), os.FileMode(0755)); err != nil {
+func initializeProject(prj *project.Project) {
+	if err := os.MkdirAll(prj.AbsPath(), os.FileMode(0755)); err != nil {
 		Fatal(err)
 	}
 
-	if !isEmpty(project.AbsPath()) {
+	if !isEmpty(prj.AbsPath()) {
 		Fatal("Cowardly refusing to initialize a non-empty dir")
 	}
 
-	if err := templates.RestoreTemplates(project.AbsPath(), "project", "project", project.TemplateData()); err != nil {
+	if err := templates.RestoreTemplates(prj.AbsPath(), "project", "project", prj.TemplateData()); err != nil {
 		Fatal(err)
 	}
 
 	// Add our initial migration for the provided "Migration" contract
-	addMigration("Migrations", project)
+	addMigration("Migrations", prj)
 
 	// Add a migration for the sample Foo contract so the scaffolding works,
 	// this is pointless so maybe remove in the future
-	addMigration("Foo", project)
+	addMigration("Foo", prj)
 
-	fmt.Println("Project initialized in", project.AbsPath())
+	fmt.Println("Project initialized in", prj.AbsPath())
 }

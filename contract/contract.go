@@ -24,13 +24,13 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/polyswarm/perigord/migration"
+	"github.com/polyswarm/perigord/network"
 	"github.com/polyswarm/perigord/project"
 )
 
 type ContractDeployer interface {
-	Deploy(context.Context, *migration.Network) (common.Address, *types.Transaction, interface{}, error)
-	Bind(context.Context, *migration.Network, common.Address) (interface{}, error)
+	Deploy(context.Context, *network.Network) (common.Address, *types.Transaction, interface{}, error)
+	Bind(context.Context, *network.Network, common.Address) (interface{}, error)
 }
 
 type Contract struct {
@@ -40,7 +40,7 @@ type Contract struct {
 	deployer ContractDeployer `json:"-"`
 }
 
-func (c *Contract) Deploy(ctx context.Context, network *migration.Network) error {
+func (c *Contract) Deploy(ctx context.Context, network *network.Network) error {
 	if !c.deployed {
 		address, _, session, err := c.deployer.Deploy(ctx, network)
 		if err != nil {
@@ -77,7 +77,7 @@ func AddContract(name string, deployer ContractDeployer) {
 	}
 }
 
-func Deploy(ctx context.Context, name string, network *migration.Network) error {
+func Deploy(ctx context.Context, name string, network *network.Network) error {
 	contract := contracts[name]
 	if contract == nil {
 		return errors.New("No such contract found")
@@ -94,7 +94,7 @@ func Deploy(ctx context.Context, name string, network *migration.Network) error 
 	return nil
 }
 
-func RecordDeployments(network *migration.Network) error {
+func RecordDeployments(network *network.Network) error {
 	project, err := project.FindProject()
 	if err != nil {
 		return err
@@ -109,7 +109,7 @@ func RecordDeployments(network *migration.Network) error {
 	return ioutil.WriteFile(network_path, data, 0644)
 }
 
-func LoadDeployments(network *migration.Network) error {
+func LoadDeployments(network *network.Network) error {
 	project, err := project.FindProject()
 	if err != nil {
 		return err

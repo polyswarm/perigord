@@ -29,10 +29,11 @@ import (
 
 	"github.com/polyswarm/perigord/contract"
 	"github.com/polyswarm/perigord/migration"
+	"github.com/polyswarm/perigord/network"
 	"github.com/polyswarm/perigord/project"
 )
 
-func SetUpTest() (*migration.Network, error) {
+func SetUpTest() (*network.Network, error) {
 	prj, err := project.FindProject()
 	if err != nil {
 		return nil, errors.New("Could not find project")
@@ -43,9 +44,9 @@ func SetUpTest() (*migration.Network, error) {
 		return nil, err
 	}
 
-	migration.InitNetworks()
+	network.InitNetworks()
 	// TODO: Fix this in config
-	network, err := migration.Dial("dev")
+	network, err := network.Dial("dev")
 	if err != nil {
 		return nil, err
 	}

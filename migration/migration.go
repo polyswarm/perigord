@@ -17,9 +17,11 @@ import (
 	"context"
 	"fmt"
 	"sort"
+
+	"github.com/polyswarm/perigord/network"
 )
 
-type MigrationFunc func(context.Context, *Network) error
+type MigrationFunc func(context.Context, *network.Network) error
 
 type Migration struct {
 	Number int
@@ -50,12 +52,11 @@ func (m *Migrator) AddMigration(migration *Migration) {
 	m.migrations = append(m.migrations, migration)
 }
 
-func (m *Migrator) RunMigrations(ctx context.Context, network *Network) error {
-	// TODO: Check migration contract for last run and only run new
+func (m *Migrator) RunMigrations(ctx context.Context, net *network.Network) error {
 	sort.Sort(m.migrations)
 	for _, migration := range m.migrations {
 		fmt.Println("Running migration", migration.Number)
-		if err := migration.F(ctx, network); err != nil {
+		if err := migration.F(ctx, net); err != nil {
 			return err
 		}
 	}
@@ -67,6 +68,6 @@ func AddMigration(migration *Migration) {
 	migrator.AddMigration(migration)
 }
 
-func RunMigrations(ctx context.Context, network *Network) error {
-	return migrator.RunMigrations(ctx, network)
+func RunMigrations(ctx context.Context, net *network.Network) error {
+	return migrator.RunMigrations(ctx, net)
 }

@@ -9,13 +9,14 @@ import (
 
 	"github.com/polyswarm/perigord/contract"
 	"github.com/polyswarm/perigord/migration"
+	"github.com/polyswarm/perigord/network"
 
 	"{{.project}}/bindings"
 )
 
 type {{.contract}}Deployer struct{}
 
-func (d *{{.contract}}Deployer) Deploy(ctx context.Context, network *migration.Network) (common.Address, *types.Transaction, interface{}, error) {
+func (d *{{.contract}}Deployer) Deploy(ctx context.Context, network *network.Network) (common.Address, *types.Transaction, interface{}, error) {
     auth := network.NewTransactor(0)
 	address, transaction, contract, err := bindings.Deploy{{.contract}}(auth, network.Client())
 	if err != nil {
@@ -33,7 +34,7 @@ func (d *{{.contract}}Deployer) Deploy(ctx context.Context, network *migration.N
 	return address, transaction, session, nil
 }
 
-func (d *{{.contract}}Deployer) Bind(ctx context.Context, network *migration.Network, address common.Address) (interface{}, error) {
+func (d *{{.contract}}Deployer) Bind(ctx context.Context, network *network.Network, address common.Address) (interface{}, error) {
     auth := network.NewTransactor(0)
 	contract, err := bindings.New{{.contract}}(address, network.Client())
 	if err != nil {
@@ -56,7 +57,7 @@ func init() {
 
 	migration.AddMigration(&migration.Migration{
 		Number: {{.number}},
-		F: func(ctx context.Context, network *migration.Network) error {
+		F: func(ctx context.Context, network *network.Network) error {
 			if err := contract.Deploy(ctx, "{{.contract}}", network); err != nil {
 				return err
 			}

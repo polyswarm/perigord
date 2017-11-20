@@ -4,14 +4,14 @@ import (
 	. "gopkg.in/check.v1"
 
 	"github.com/polyswarm/perigord/contract"
-	"github.com/polyswarm/perigord/migration"
+	"github.com/polyswarm/perigord/network"
 	"github.com/polyswarm/perigord/testing"
 
 	"{{.project}}/bindings"
 )
 
 type {{.test}}Suite struct {
-    network     *migration.Network
+    network     *network.Network
 }
 
 var _ = Suite(&{{.test}}Suite{})

@@ -16,40 +16,60 @@ package migration
 import (
 	"errors"
 
+	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/spf13/viper"
 )
 
-var networks map[string]string
+type NetworkConfig struct {
+	url           string
+	keystore_path string
+}
+
+var networks map[string]NetworkConfig
 
 func InitNetworks() {
-	networks = viper.GetStringMapString("networks")
+	configs := viper.GetStringMap("networks")
+	networks = make(map[string]NetworkConfig)
+
+	for key, _ := range configs {
+		config := viper.GetStringMapString("networks." + key)
+		networks[key] = NetworkConfig{
+			url:           config["url"],
+			keystore_path: config["keystore"],
+		}
+	}
 }
 
 type Network struct {
 	name       string
 	rpc_client *rpc.Client
 	client     *ethclient.Client
-	accounts   []common.Address
+	keystore   *keystore.KeyStore
 }
 
 func Dial(name string) (*Network, error) {
-	if url, ok := networks[name]; ok {
-		rpc_client, err := rpc.Dial(url)
-
+	if config, ok := networks[name]; ok {
+		rpc_client, err := rpc.Dial(config.url)
 		if err != nil {
 			return nil, err
 		}
 
 		client := ethclient.NewClient(rpc_client)
 
-		var accounts []common.Address
-		rpc_client.Call(&accounts, "eth_accounts")
+		ks := keystore.NewKeyStore(config.keystore_path, keystore.StandardScryptN, keystore.StandardScryptP)
 
-		ret := &Network{name, rpc_client, client, accounts}
+		ret := &Network{
+			name:       name,
+			rpc_client: rpc_client,
+			client:     client,
+			keystore:   ks,
+		}
 
 		return ret, nil
 	}
@@ -69,9 +89,28 @@ func (n *Network) RpcClient() *rpc.Client {
 	return n.rpc_client
 }
 
-func (n *Network) NewTransactor(account uint) *bind.TransactOpts {
+func (n *Network) Accounts() []accounts.Account {
+	return n.keystore.Accounts()
+}
+
+func (n *Network) Unlock(a accounts.Account, passphrase string) error {
+	return n.keystore.Unlock(a, passphrase)
+}
+
+func (n *Network) NewTransactor(a accounts.Account) *bind.TransactOpts {
 	return &bind.TransactOpts{
-		From:   n.accounts[account],
-		Signer: nil,
+		From: a.Address,
+		Signer: func(signer types.Signer, address common.Address, tx *types.Transaction) (*types.Transaction, error) {
+			if address != a.Address {
+				return nil, errors.New("not authorized to sign this account")
+			}
+
+			signature, err := n.keystore.SignHash(a, signer.Hash(tx).Bytes())
+			if err != nil {
+				return nil, err
+			}
+
+			return tx.WithSignature(signer, signature)
+		},
 	}
 }

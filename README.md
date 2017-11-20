@@ -1,5 +1,7 @@
 # Perigord: Golang Tools for Ethereum Development
 
+*Note:* Perigord is in development and it's API is subject to change.
+
 ![Perigord Image (not covered by LICENSE)](https://polyswarm.io/img/perigord-logo-small.jpg)
 
 This image is not covered by LICENSE. 

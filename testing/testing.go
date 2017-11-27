@@ -22,40 +22,26 @@ package testing
 
 import (
 	"context"
-	"errors"
-	"path/filepath"
-
-	"github.com/spf13/viper"
 
 	"github.com/polyswarm/perigord/contract"
 	"github.com/polyswarm/perigord/migration"
 	"github.com/polyswarm/perigord/network"
-	"github.com/polyswarm/perigord/project"
 )
 
 func SetUpTest() (*network.Network, error) {
-	prj, err := project.FindProject()
-	if err != nil {
-		return nil, errors.New("Could not find project")
-	}
-
-	viper.SetConfigFile(filepath.Join(prj.AbsPath(), project.ProjectConfigFilename))
-	if err := viper.ReadInConfig(); err != nil {
-		return nil, err
-	}
-
 	network.InitNetworks()
+
 	// TODO: Fix this in config
-	network, err := network.Dial("dev")
+	nw, err := network.Dial("dev")
 	if err != nil {
 		return nil, err
 	}
 
-	if err := migration.RunMigrations(context.Background(), network); err != nil {
+	if err := migration.RunMigrations(context.Background(), nw); err != nil {
 		return nil, err
 	}
 
-	return network, nil
+	return nw, nil
 }
 
 func TearDownTest() {

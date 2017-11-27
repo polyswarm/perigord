@@ -20,19 +20,20 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/polyswarm/perigord/migration"
+	"github.com/polyswarm/perigord/network"
 	perigord "github.com/polyswarm/perigord/perigord/cmd"
 )
 
 var migrateCmd = &cobra.Command{
 	Use: "migrate",
 	Run: func(cmd *cobra.Command, args []string) {
-		migration.InitNetworks()
-		network, err := migration.Dial(viper.GetString("default_network"))
+		network.InitNetworks()
+		nw, err := network.Dial(viper.GetString("default_network"))
 		if err != nil {
 			perigord.Fatal(err)
 		}
 
-		if err := migration.RunMigrations(context.Background(), network); err != nil {
+		if err := migration.RunMigrations(context.Background(), nw); err != nil {
 			perigord.Fatal(err)
 		}
 	},

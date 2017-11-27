@@ -15,6 +15,7 @@ package network
 
 import (
 	"errors"
+	"path/filepath"
 
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -24,6 +25,8 @@ import (
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/spf13/viper"
+
+	"github.com/polyswarm/perigord/project"
 )
 
 type NetworkConfig struct {
@@ -33,7 +36,17 @@ type NetworkConfig struct {
 
 var networks map[string]NetworkConfig
 
-func InitNetworks() {
+func InitNetworks() error {
+	prj, err := project.FindProject()
+	if err != nil {
+		return errors.New("Could not find project")
+	}
+
+	viper.SetConfigFile(filepath.Join(prj.AbsPath(), project.ProjectConfigFilename))
+	if err := viper.ReadInConfig(); err != nil {
+		return err
+	}
+
 	configs := viper.GetStringMap("networks")
 	networks = make(map[string]NetworkConfig)
 
@@ -44,6 +57,8 @@ func InitNetworks() {
 			keystore_path: config["keystore"],
 		}
 	}
+
+	return nil
 }
 
 type Network struct {

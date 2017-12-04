@@ -1,16 +1,18 @@
 FROM ubuntu:16.04
-MAINTAINER Maxwell Koo <mjkoo90@gmail.com>
+LABEL maintainer="Maxwell Koo <mjkoo90@gmail.com>"
 
 RUN set -x && \
     apt-get update && \
     apt-get -y install software-properties-common && \
     apt-add-repository -y ppa:longsleep/golang-backports && \
     apt-add-repository -y ppa:ethereum/ethereum && \
-    apt-get update && apt-get -y install \
+    apt-get update && \
+    apt-get -y install \
         git \
         golang-go \
         solc && \
-    apt-get -y purge software-properties-common && apt-get -y autoremove && \
+    apt-get -y purge software-properties-common && \
+    apt-get -y autoremove && \
     rm -rf /var/lib/apt/lists/*
 
 ENV GOPATH /go

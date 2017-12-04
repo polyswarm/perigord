@@ -18,13 +18,15 @@ RUN set -x && \
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:$PATH
 
+RUN mkdir -p $GOPATH/src/github.com/polyswarm/perigord/
+ADD . $GOPATH/src/github.com/polyswarm/perigord/
+
 RUN set -x && \
-    mkdir -p $GOPATH && \
     go get -u github.com/ethereum/go-ethereum && \
     cd $GOPATH/src/github.com/ethereum/go-ethereum/cmd/abigen && \
     go install && \
     go get -u github.com/jteeuwen/go-bindata/... && \
-    (go get -u github.com/polyswarm/perigord/... || true) && \
+    (go get github.com/polyswarm/perigord/... || true) && \
     cd $GOPATH/src/github.com/polyswarm/perigord && \
     go generate && \
     cd perigord && \

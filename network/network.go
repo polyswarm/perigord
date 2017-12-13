@@ -81,6 +81,9 @@ func Dial(name string) (*Network, error) {
 		client := ethclient.NewClient(rpc_client)
 
 		ks := keystore.NewKeyStore(config.keystore_path, keystore.StandardScryptN, keystore.StandardScryptP)
+		if len(ks.Accounts()) == 0 {
+			return nil, errors.New("No accounts configured for this network, did you set the keystore path in perigord.yaml?")
+		}
 
 		ret := &Network{
 			name:       name,

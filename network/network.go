@@ -96,12 +96,24 @@ func (n *Network) Name() string {
 	return n.name
 }
 
-func (n *Network) Client() *ethclient.Client {
-	return n.client
+func (n *Network) Url() string {
+	return networks[n.name].url
+}
+
+func (n *Network) KeystorePath() string {
+	return networks[n.name].keystore_path
 }
 
 func (n *Network) RpcClient() *rpc.Client {
 	return n.rpc_client
+}
+
+func (n *Network) Client() *ethclient.Client {
+	return n.client
+}
+
+func (n *Network) Keystore() *keystore.KeyStore {
+	return n.keystore
 }
 
 func (n *Network) Accounts() []accounts.Account {

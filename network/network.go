@@ -15,6 +15,7 @@ package network
 
 import (
 	"errors"
+	"fmt"
 	"path/filepath"
 
 	"github.com/ethereum/go-ethereum/accounts"
@@ -27,6 +28,8 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/polyswarm/perigord/project"
+
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 type NetworkConfig struct {
@@ -122,6 +125,18 @@ func (n *Network) Accounts() []accounts.Account {
 
 func (n *Network) Unlock(a accounts.Account, passphrase string) error {
 	return n.keystore.Unlock(a, passphrase)
+}
+
+func (n *Network) UnlockWithPrompt(a accounts.Account) error {
+	// https://stackoverflow.com/questions/2137357/getpasswd-functionality-in-go
+	fmt.Print("Enter passphrase for account ", a.Address.Hex(), ": ")
+	passphrase, err := terminal.ReadPassword(0)
+	if err != nil {
+		return err
+	}
+	fmt.Println()
+
+	return n.Unlock(a, string(passphrase))
 }
 
 func (n *Network) NewTransactor(a accounts.Account) *bind.TransactOpts {

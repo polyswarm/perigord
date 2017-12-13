@@ -62,6 +62,7 @@ func ExecWithOutput(command string, args ...string) error {
 	cmd := exec.Command(command, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
 	return cmd.Run()
 }
 
@@ -86,15 +87,8 @@ func RunInRoot(f func() error) error {
 
 func runStub(stubcommand string, stubargs ...string) error {
 	return RunInRoot(func() error {
-		// Our stub depends on up to date bindings, make sure they're generated
 		command := runtime.GOROOT() + "/bin/go"
-		args := []string{"generate"}
-		err := ExecWithOutput(command, args...)
-		if err != nil {
-			return err
-		}
-
-		args = append([]string{"run", "stub/main.go", stubcommand}, stubargs...)
+		args := append([]string{"run", "stub/main.go", stubcommand}, stubargs...)
 		return ExecWithOutput(command, args...)
 	})
 }

@@ -33,7 +33,7 @@ var migrateCmd = &cobra.Command{
 			perigord.Fatal(err)
 		}
 
-		if err := migration.RunMigrations(context.Background(), nw, false); err != nil {
+		if err := migration.RunMigrations(context.Background(), nw, viper.GetBool("reset")); err != nil {
 			perigord.Fatal(err)
 		}
 	},
@@ -43,7 +43,9 @@ func init() {
 	RootCmd.AddCommand(migrateCmd)
 
 	migrateCmd.PersistentFlags().StringP("network", "n", "NAME", "network to run migrations on")
+	migrateCmd.PersistentFlags().Bool("reset", false, "redeploy all migrations")
 
+	viper.BindPFlag("reset", migrateCmd.PersistentFlags().Lookup("reset"))
 	viper.BindPFlag("default_network", migrateCmd.PersistentFlags().Lookup("network"))
 	viper.SetDefault("default_network", "dev")
 }

@@ -33,7 +33,7 @@ var migrateCmd = &cobra.Command{
 			perigord.Fatal(err)
 		}
 
-		if err := migration.RunMigrations(context.Background(), nw); err != nil {
+		if err := migration.RunMigrations(context.Background(), nw, false); err != nil {
 			perigord.Fatal(err)
 		}
 	},

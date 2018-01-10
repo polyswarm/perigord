@@ -128,6 +128,7 @@ func LoadDeployments(network *network.Network) error {
 
 	// Retain our initialized deployers, bind our sessions
 	for name, contract := range loaded_contracts {
+		contract.deployed = true
 		contract.deployer = contracts[name].deployer
 		contract.Deploy(context.Background(), network)
 	}

@@ -17,7 +17,12 @@ type {{.test}}Suite struct {
 var _ = Suite(&{{.test}}Suite{})
 
 func (s *{{.test}}Suite) SetUpTest(c *C) {
-	s.network, _ = testing.SetUpTest()
+	nw, err := testing.SetUpTest()
+	if err != nil {
+		c.Fatal(err)
+	}
+
+	s.network = nw
 }
 
 func (s *{{.test}}Suite) TearDownTest(c *C) {

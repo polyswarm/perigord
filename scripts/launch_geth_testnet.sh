@@ -3,6 +3,7 @@
 DIR=/tmp/geth_private_testnet
 
 # cd to script directory
+mkdir -p $DIR
 cd "${0%/*}"
 
 cp ./genesis.json $DIR

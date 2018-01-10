@@ -37,7 +37,7 @@ func SetUpTest() (*network.Network, error) {
 		return nil, err
 	}
 
-	if err := migration.RunMigrations(context.Background(), nw); err != nil {
+	if err := migration.RunMigrations(context.Background(), nw, true); err != nil {
 		return nil, err
 	}
 

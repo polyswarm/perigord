@@ -16,8 +16,13 @@ package migration
 import (
 	"context"
 	"fmt"
+	"math/big"
 	"sort"
 
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+
+	"github.com/polyswarm/perigord/contract"
+	"github.com/polyswarm/perigord/migration/bindings"
 	"github.com/polyswarm/perigord/network"
 )
 
@@ -52,11 +57,49 @@ func (m *Migrator) AddMigration(migration *Migration) {
 	m.migrations = append(m.migrations, migration)
 }
 
-func (m *Migrator) RunMigrations(ctx context.Context, net *network.Network) error {
+func (m *Migrator) RunMigrations(ctx context.Context, net *network.Network, clean bool) error {
 	sort.Sort(m.migrations)
+	lastMigration := big.NewInt(0)
+	currentMigration := big.NewInt(0)
+
+	if !clean {
+		contract.LoadDeployments(net)
+	}
+
+	migrationsSession, ok := contract.Session("Migrations").(*bindings.MigrationsSession)
+	if !clean && migrationsSession != nil && ok {
+		lm, err := migrationsSession.Last_completed_migration()
+		if err != nil {
+			return err
+		}
+
+		currentMigration.Set(lm)
+		lastMigration.Set(lm)
+	}
+
 	for _, migration := range m.migrations {
+		if int64(migration.Number) <= lastMigration.Int64() {
+			continue
+		}
+
 		fmt.Println("Running migration", migration.Number)
 		if err := migration.F(ctx, net); err != nil {
+			return err
+		}
+
+		currentMigration = big.NewInt(int64(migration.Number))
+	}
+
+	migrationsSession, ok = contract.Session("Migrations").(*bindings.MigrationsSession)
+	if currentMigration.Cmp(lastMigration) != 0 && migrationsSession != nil && ok {
+		fmt.Println("Setting last migration to: ", currentMigration)
+		tx, err := migrationsSession.SetCompleted(currentMigration)
+		if err != nil {
+			return err
+		}
+
+		_, err = bind.WaitMined(ctx, net.Client(), tx)
+		if err != nil {
 			return err
 		}
 	}
@@ -68,6 +111,6 @@ func AddMigration(migration *Migration) {
 	migrator.AddMigration(migration)
 }
 
-func RunMigrations(ctx context.Context, net *network.Network) error {
-	return migrator.RunMigrations(ctx, net)
+func RunMigrations(ctx context.Context, net *network.Network, clean bool) error {
+	return migrator.RunMigrations(ctx, net, clean)
 }

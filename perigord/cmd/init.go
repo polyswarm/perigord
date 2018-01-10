@@ -91,12 +91,5 @@ func initializeProject(prj *project.Project) {
 		Fatal(err)
 	}
 
-	// Add our initial migration for the provided "Migration" contract
-	addMigration("Migrations", prj)
-
-	// Add a migration for the sample Foo contract so the scaffolding works,
-	// this is pointless so maybe remove in the future
-	addMigration("Foo", prj)
-
 	fmt.Println("Project initialized in", prj.AbsPath())
 }

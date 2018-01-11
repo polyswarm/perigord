@@ -14,45 +14,18 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"runtime"
-	"strings"
-)
 
-const (
-	ProjectConfigFilename = "perigord.yaml"
-	ContractsDirectory    = "contracts"
-	BuildDirectory        = "build"
-	BindingsDirectory     = "bindings"
-	MigrationsDirectory   = "migrations"
-	TestsDirectory        = "tests"
+	"github.com/polyswarm/perigord/project"
 )
 
 func Fatal(v ...interface{}) {
 	fmt.Println("Error:", v)
 	os.Exit(1)
-}
-
-// This function from github.com/spf13/cobra used under Apache 2.0 license
-func exists(path string) (bool, error) {
-	if path == "" {
-		return false, nil
-	}
-
-	_, err := os.Stat(path)
-	if err == nil {
-		return true, nil
-	}
-	if !os.IsNotExist(err) {
-		return false, err
-	}
-
-	return false, nil
 }
 
 // This function from github.com/spf13/cobra used under Apache 2.0 license
@@ -85,36 +58,11 @@ func isEmpty(path string) bool {
 	return true
 }
 
-// Public as we also run from the stub
-func FindProject() (*Project, error) {
-	wd, err := os.Getwd()
-	if err != nil {
-		return nil, err
-	}
-
-	return findProject(wd)
-}
-
-func findProject(path string) (*Project, error) {
-	if strings.HasSuffix(path, string(filepath.Separator)) {
-		return nil, errors.New("Could not find project root")
-	}
-
-	e, err := exists(filepath.Join(path, ProjectConfigFilename))
-	if err != nil {
-		return nil, err
-	}
-	if e {
-		return NewProjectFromPath(path), nil
-	}
-
-	return findProject(filepath.Dir(path))
-}
-
 func ExecWithOutput(command string, args ...string) error {
 	cmd := exec.Command(command, args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
 	return cmd.Run()
 }
 
@@ -139,12 +87,12 @@ func RunInRoot(f func() error) error {
 		return err
 	}
 
-	project, err := findProject(wd)
+	prj, err := project.FindProject()
 	if err != nil {
 		return err
 	}
 
-	if err := os.Chdir(project.AbsPath()); err != nil {
+	if err := os.Chdir(prj.AbsPath()); err != nil {
 		return err
 	}
 	defer os.Chdir(wd)
@@ -154,15 +102,8 @@ func RunInRoot(f func() error) error {
 
 func runStub(stubcommand string, stubargs ...string) error {
 	return RunInRoot(func() error {
-		// Our stub depends on up to date bindings, make sure they're generated
 		command := runtime.GOROOT() + "/bin/go"
-		args := []string{"generate"}
-		err := ExecWithOutput(command, args...)
-		if err != nil {
-			return err
-		}
-
-		args = append([]string{"run", "stub/main.go", stubcommand}, stubargs...)
+		args := append([]string{"run", "stub/main.go", stubcommand}, stubargs...)
 		return ExecWithOutput(command, args...)
 	})
 }

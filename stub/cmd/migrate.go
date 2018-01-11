@@ -20,19 +20,20 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/polyswarm/perigord/migration"
+	"github.com/polyswarm/perigord/network"
 	perigord "github.com/polyswarm/perigord/perigord/cmd"
 )
 
 var migrateCmd = &cobra.Command{
 	Use: "migrate",
 	Run: func(cmd *cobra.Command, args []string) {
-		migration.InitNetworks()
-		network, err := migration.Dial(viper.GetString("default_network"))
+		network.InitNetworks()
+		nw, err := network.Dial(viper.GetString("default_network"))
 		if err != nil {
 			perigord.Fatal(err)
 		}
 
-		if err := migration.RunMigrations(context.Background(), network); err != nil {
+		if err := migration.RunMigrations(context.Background(), nw, viper.GetBool("reset")); err != nil {
 			perigord.Fatal(err)
 		}
 	},
@@ -42,7 +43,9 @@ func init() {
 	RootCmd.AddCommand(migrateCmd)
 
 	migrateCmd.PersistentFlags().StringP("network", "n", "NAME", "network to run migrations on")
+	migrateCmd.PersistentFlags().Bool("reset", false, "redeploy all migrations")
 
+	viper.BindPFlag("reset", migrateCmd.PersistentFlags().Lookup("reset"))
 	viper.BindPFlag("default_network", migrateCmd.PersistentFlags().Lookup("network"))
 	viper.SetDefault("default_network", "dev")
 }

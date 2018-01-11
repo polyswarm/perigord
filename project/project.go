@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cmd
+package project
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -28,7 +29,8 @@ func init() {
 	envGoPath := os.Getenv("GOPATH")
 	goPaths := filepath.SplitList(envGoPath)
 	if len(goPaths) == 0 {
-		Fatal("$GOPATH is not set")
+		fmt.Println("$GOPATH is not set")
+		os.Exit(1)
 	}
 	srcPaths = make([]string, 0, len(goPaths))
 	for _, goPath := range goPaths {
@@ -62,7 +64,7 @@ func NewProject(projectName string) *Project {
 	if p.absPath == "" {
 		wd, err := os.Getwd()
 		if err != nil {
-			Fatal(err)
+			return nil
 		}
 		for _, srcPath := range srcPaths {
 			goPath := filepath.Dir(srcPath)
@@ -118,7 +120,8 @@ func NewProjectFromPath(absPath string) *Project {
 func trimSrcPath(absPath, srcPath string) string {
 	relPath, err := filepath.Rel(srcPath, absPath)
 	if err != nil {
-		Fatal("Cobra supports project only within $GOPATH: " + err.Error())
+		fmt.Println("Cobra supports project only within $GOPATH: " + err.Error())
+		os.Exit(1)
 	}
 	return relPath
 }

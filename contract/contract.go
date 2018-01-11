@@ -15,35 +15,44 @@ package contract
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"path/filepath"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/polyswarm/perigord/migration"
+	"github.com/polyswarm/perigord/network"
+	"github.com/polyswarm/perigord/project"
 )
 
 type ContractDeployer interface {
-	Deploy(context.Context, *migration.Network) (common.Address, *types.Transaction, interface{}, error)
-	Bind(context.Context, *migration.Network, common.Address) (interface{}, error)
+	Deploy(context.Context, *network.Network) (common.Address, *types.Transaction, interface{}, error)
+	Bind(context.Context, *network.Network, common.Address) (interface{}, error)
 }
 
 type Contract struct {
 	Address  common.Address
-	Session  interface{}
 	deployed bool
-	deployer ContractDeployer
+	Session  interface{}      `json:"-"`
+	deployer ContractDeployer `json:"-"`
 }
 
-func (c *Contract) Deploy(ctx context.Context, network *migration.Network) error {
+func (c *Contract) Deploy(ctx context.Context, network *network.Network) error {
 	if !c.deployed {
 		address, _, session, err := c.deployer.Deploy(ctx, network)
 		if err != nil {
 			return err
 		}
 
-		// TODO: Do we need to WaitDeployed? Seems to hang forever on both geth
-		// and testrpc
+		client := network.Client()
+		code, err := client.CodeAt(ctx, address, nil)
+		for err != nil || len(code) == 0 {
+			time.Sleep(time.Second)
+			code, err = client.CodeAt(ctx, address, nil)
+		}
 
 		c.Address = address
 		c.Session = session
@@ -68,13 +77,64 @@ func AddContract(name string, deployer ContractDeployer) {
 	}
 }
 
-func Deploy(ctx context.Context, name string, network *migration.Network) error {
+func Deploy(ctx context.Context, name string, network *network.Network) error {
 	contract := contracts[name]
 	if contract == nil {
 		return errors.New("No such contract found")
 	}
 
-	return contract.Deploy(ctx, network)
+	if err := contract.Deploy(ctx, network); err != nil {
+		return err
+	}
+
+	if err := RecordDeployments(network); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func RecordDeployments(network *network.Network) error {
+	project, err := project.FindProject()
+	if err != nil {
+		return err
+	}
+
+	data, err := json.Marshal(contracts)
+	if err != nil {
+		return err
+	}
+
+	network_path := filepath.Join(project.AbsPath(), network.Name()+".json")
+	return ioutil.WriteFile(network_path, data, 0644)
+}
+
+func LoadDeployments(network *network.Network) error {
+	project, err := project.FindProject()
+	if err != nil {
+		return err
+	}
+
+	network_path := filepath.Join(project.AbsPath(), network.Name()+".json")
+	data, err := ioutil.ReadFile(network_path)
+	if err != nil {
+		return err
+	}
+
+	var loaded_contracts map[string]*Contract
+	if err := json.Unmarshal(data, &loaded_contracts); err != nil {
+		return err
+	}
+
+	// Retain our initialized deployers, bind our sessions
+	for name, contract := range loaded_contracts {
+		contract.deployed = true
+		contract.deployer = contracts[name].deployer
+		contract.Deploy(context.Background(), network)
+	}
+
+	contracts = loaded_contracts
+	return nil
 }
 
 func Session(name string) interface{} {
@@ -82,7 +142,6 @@ func Session(name string) interface{} {
 	if contract == nil || !contract.deployed {
 		return nil
 	}
-
 	return contract.Session
 }
 
@@ -92,4 +151,13 @@ func Reset() {
 			deployer: v.deployer,
 		}
 	}
+}
+
+func AddressOf(name string) common.Address {
+	contract := contracts[name]
+	if contract == nil || !contract.deployed {
+		return common.Address{}
+	}
+
+	return contract.Address
 }

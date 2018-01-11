@@ -14,10 +14,11 @@
 
 // Parts inspired by https://github.com/ryanuber/go-license
 
-package cmd
+package project
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -112,7 +113,8 @@ func copyrightLine() string {
 func findLicense(name string) License {
 	found := matchLicense(name)
 	if found == "" {
-		Fatal("unknown license: " + name)
+		fmt.Println("unknown license: " + name)
+		os.Exit(1)
 	}
 	return Licenses[found]
 }

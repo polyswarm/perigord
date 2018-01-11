@@ -21,10 +21,12 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/spf13/cobra"
 
+	"github.com/polyswarm/perigord/project"
 	"github.com/polyswarm/perigord/templates"
 )
 
@@ -64,18 +66,28 @@ func init() {
 }
 
 func compileContracts() error {
-	if err := os.Chdir(ContractsDirectory); err != nil {
+	if err := os.Chdir(project.ContractsDirectory); err != nil {
 		return err
 	}
 
-	matches := make([]string, 0)
+	type match struct {
+		Filename string
+		Content  string
+	}
+
+	matches := make([]match, 0)
 	err := filepath.Walk(".", func(path string, f os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
 
 		if strings.HasSuffix(path, ".sol") {
-			matches = append(matches, path)
+			content, err := ioutil.ReadFile(path)
+			if err != nil {
+				return err
+			}
+
+			matches = append(matches, match{Filename: path, Content: strconv.Quote(string(content))})
 		}
 		return nil
 	})
@@ -94,17 +106,13 @@ func compileContracts() error {
 		return errors.New("Can't locate solc, is it installed and in your path")
 	}
 
-	dir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
 	compilerConfig, err := templates.ExecuteTemplate("solc/solc.json.tpl", matches)
+	fmt.Println(compilerConfig)
 	if err != nil {
 		return err
 	}
 
-	args := []string{"--allow-paths", dir, "--standard-json"}
+	args := []string{"--standard-json"}
 	outputJson, err := ExecWithPipes(command, compilerConfig.Bytes(), args...)
 	if err != nil {
 		return err
@@ -164,7 +172,7 @@ func handleErrors(output map[string]interface{}) error {
 }
 
 func saveArtifacts(output map[string]interface{}) error {
-	if err := os.MkdirAll(BuildDirectory, os.FileMode(0755)); err != nil {
+	if err := os.MkdirAll(project.BuildDirectory, os.FileMode(0755)); err != nil {
 		return err
 	}
 
@@ -213,9 +221,9 @@ func saveArtifacts(output map[string]interface{}) error {
 				return err
 			}
 
-			ioutil.WriteFile(filepath.Join(BuildDirectory, name+".abi"), abi, 0644)
-			ioutil.WriteFile(filepath.Join(BuildDirectory, name+".bin"), []byte(bytecode), 0644)
-			ioutil.WriteFile(filepath.Join(BuildDirectory, name+".link"), linkReferences, 0644)
+			ioutil.WriteFile(filepath.Join(project.BuildDirectory, name+".abi"), abi, 0644)
+			ioutil.WriteFile(filepath.Join(project.BuildDirectory, name+".bin"), []byte(bytecode), 0644)
+			ioutil.WriteFile(filepath.Join(project.BuildDirectory, name+".link"), linkReferences, 0644)
 		}
 	}
 
@@ -223,38 +231,36 @@ func saveArtifacts(output map[string]interface{}) error {
 }
 
 func generateBindings() error {
+	matches, err := filepath.Glob(project.BuildDirectory + "/*.abi")
+	if err != nil {
+		return err
+	}
+
+	if err := os.MkdirAll(project.BindingsDirectory, os.FileMode(0755)); err != nil {
+		return err
+	}
+
+	for _, match := range matches {
+		if err := generateBinding(strings.TrimSuffix(match, filepath.Ext(match))); err != nil {
+			return err
+		}
+	}
+
 	return nil
-	//	matches, err := filepath.Glob(BuildDirectory + "/*.abi")
-	//	if err != nil {
-	//		return err
-	//	}
-	//
-	//	if err := os.MkdirAll(BindingsDirectory, os.FileMode(0755)); err != nil {
-	//		return err
-	//	}
-	//
-	//	for _, match := range matches {
-	//		if err := generateBinding(strings.TrimSuffix(match, filepath.Ext(match))); err != nil {
-	//			return err
-	//		}
-	//	}
-	//
-	//	return nil
 }
 
 func generateBinding(path string) error {
-	return nil
-	//	// TODO: Allow alternate binding directories / package names, in config file
-	//	command := "abigen"
-	//	_, err := exec.LookPath(command)
-	//	if err != nil {
-	//		return errors.New("Can't locate abigen, is it installed and in your path")
-	//	}
-	//
-	//	name := filepath.Base(path)
-	//	abifile := path + ".abi"
-	//	binfile := path + ".bin"
-	//	outfile := filepath.Join(BindingsDirectory, filepath.Base(name)) + ".go"
-	//	args := []string{"--abi", abifile, "--bin", binfile, "--pkg", "bindings", "--type", name, "--out", outfile}
-	//	return ExecWithOutput(command, args...)
+	// TODO: Allow alternate binding directories / package names, in config file
+	command := "abigen"
+	_, err := exec.LookPath(command)
+	if err != nil {
+		return errors.New("Can't locate abigen, is it installed and in your path")
+	}
+
+	name := filepath.Base(path)
+	abifile := path + ".abi"
+	binfile := path + ".bin"
+	outfile := filepath.Join(project.BindingsDirectory, filepath.Base(name)) + ".go"
+	args := []string{"--abi", abifile, "--bin", binfile, "--pkg", "bindings", "--type", name, "--out", outfile}
+	return ExecWithOutput(command, args...)
 }

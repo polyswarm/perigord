@@ -20,6 +20,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/polyswarm/perigord/project"
 )
 
 var RootCmd = &cobra.Command{
@@ -41,9 +43,9 @@ func init() {
 }
 
 func initConfig() {
-	project, _ := FindProject()
-	if project != nil {
-		viper.SetConfigFile(filepath.Join(project.AbsPath(), ProjectConfigFilename))
+	prj, err := project.FindProject()
+	if prj != nil && err == nil {
+		viper.SetConfigFile(filepath.Join(prj.AbsPath(), project.ProjectConfigFilename))
 		if err := viper.ReadInConfig(); err != nil {
 			Fatal(err)
 		}

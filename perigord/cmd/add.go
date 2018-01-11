@@ -21,6 +21,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/polyswarm/perigord/project"
 	"github.com/polyswarm/perigord/templates"
 )
 
@@ -44,7 +45,7 @@ var addContractCmd = &cobra.Command{
 			Fatal("Invalid contract name specified")
 		}
 
-		project, err := FindProject()
+		project, err := project.FindProject()
 		if err != nil {
 			Fatal(err)
 		}
@@ -68,7 +69,7 @@ var addMigrationCmd = &cobra.Command{
 			Fatal("Invalid test name specified")
 		}
 
-		project, err := FindProject()
+		project, err := project.FindProject()
 		if err != nil {
 			Fatal(err)
 		}
@@ -92,7 +93,7 @@ var addTestCmd = &cobra.Command{
 			Fatal("Invalid test name specified")
 		}
 
-		project, err := FindProject()
+		project, err := project.FindProject()
 		if err != nil {
 			Fatal(err)
 		}
@@ -108,14 +109,14 @@ func init() {
 	RootCmd.AddCommand(addCmd)
 }
 
-func addContract(name string, project *Project) {
-	path := filepath.Join(project.AbsPath(), ContractsDirectory, name+".sol")
+func addContract(name string, prj *project.Project) {
+	path := filepath.Join(prj.AbsPath(), project.ContractsDirectory, name+".sol")
 
 	if err := os.MkdirAll(filepath.Dir(path), os.FileMode(0755)); err != nil {
 		Fatal(err)
 	}
 
-	data := project.TemplateData()
+	data := prj.TemplateData()
 	data["contract"] = name
 
 	if err := templates.RestoreTemplate(path, "contract/contract.sol.tpl", data); err != nil {
@@ -125,8 +126,8 @@ func addContract(name string, project *Project) {
 	fmt.Println("New contract added at", path)
 }
 
-func addMigration(name string, project *Project) {
-	path := filepath.Join(project.AbsPath(), MigrationsDirectory)
+func addMigration(name string, prj *project.Project) {
+	path := filepath.Join(prj.AbsPath(), project.MigrationsDirectory)
 	glob, err := filepath.Glob(filepath.Join(path, "*.go"))
 
 	numMigrations := 1
@@ -140,7 +141,7 @@ func addMigration(name string, project *Project) {
 		Fatal(err)
 	}
 
-	data := project.TemplateData()
+	data := prj.TemplateData()
 	data["contract"] = name
 	data["number"] = numMigrations
 
@@ -151,14 +152,14 @@ func addMigration(name string, project *Project) {
 	fmt.Println("New migration added at", path)
 }
 
-func addTest(name string, project *Project) {
-	path := filepath.Join(project.AbsPath(), TestsDirectory, name+".go")
+func addTest(name string, prj *project.Project) {
+	path := filepath.Join(prj.AbsPath(), project.TestsDirectory, name+".go")
 
 	if err := os.MkdirAll(filepath.Dir(path), os.FileMode(0755)); err != nil {
 		Fatal(err)
 	}
 
-	data := project.TemplateData()
+	data := prj.TemplateData()
 	data["test"] = name
 
 	if err := templates.RestoreTemplate(path, "test/test.go.tpl", data); err != nil {

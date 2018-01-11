@@ -1,12 +1,10 @@
 {
   "language": "Solidity",
   "sources": {
-    {{range $index, $file := .}}
+    {{range $index, $match := .}}
     {{if $index}},{{end}}
-    "{{basename $file}}": {
-      "urls": [
-        "{{$file}}"
-      ]
+    "{{$match.Filename}}": {
+      "content": {{$match.Content}}
     }
     {{end}}
   },

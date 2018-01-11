@@ -2,14 +2,14 @@
 package main
 
 import (
-	"context"
+//	"context"
 
-	"github.com/polyswarm/perigord/migration"
+//	"github.com/polyswarm/perigord/migration"
 
 	_ "{{.project}}/migrations"
 )
 
 func main() {
 	// Run our migrations
-	migration.RunMigrations(context.Background())
+	//migration.RunMigrations(context.Background())
 }

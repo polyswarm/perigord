@@ -23,14 +23,25 @@ package testing
 import (
 	"context"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/polyswarm/perigord/contract"
 	"github.com/polyswarm/perigord/migration"
+	"github.com/polyswarm/perigord/network"
 )
 
-func SetUpTest() (*bind.TransactOpts, bind.ContractBackend) {
-	migration.RunMigrations(context.Background())
-	return migration.Auth(), migration.Backend()
+func SetUpTest() (*network.Network, error) {
+	network.InitNetworks()
+
+	// TODO: Fix this in config
+	nw, err := network.Dial("dev")
+	if err != nil {
+		return nil, err
+	}
+
+	if err := migration.RunMigrations(context.Background(), nw, true); err != nil {
+		return nil, err
+	}
+
+	return nw, nil
 }
 
 func TearDownTest() {

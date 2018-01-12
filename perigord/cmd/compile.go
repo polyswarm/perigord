@@ -107,7 +107,6 @@ func compileContracts() error {
 	}
 
 	compilerConfig, err := templates.ExecuteTemplate("solc/solc.json.tpl", matches)
-	fmt.Println(compilerConfig)
 	if err != nil {
 		return err
 	}

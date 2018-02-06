@@ -53,21 +53,16 @@ $ go install ./cmd/abigen
 $ popd
 ```
 
-### Build Dependency: `go-bindata`
-
-```
-$ go get -u github.com/jteeuwen/go-bindata/...
-```
-
 ## Setup
 
 ```
 $ go get -u github.com/polyswarm/perigord/...
-$ pushd $GOPATH/src/github.com/polyswarm/perigord
-$ go generate
-$ cd perigord
-$ go install
-$ popd
+```
+
+### Dev Dependency: `go-bindata`
+
+```
+$ go get -u github.com/jteeuwen/go-bindata/...
 ```
 
 ## Usage

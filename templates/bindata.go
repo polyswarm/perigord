@@ -114,7 +114,7 @@ func bindataGo() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "bindata.go", size: 0, mode: os.FileMode(436), modTime: time.Unix(1516421219, 0)}
+	info := bindataFileInfo{name: "bindata.go", size: 0, mode: os.FileMode(436), modTime: time.Unix(1517899706, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -134,7 +134,7 @@ func contractContractSolTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "contract/contract.sol.tpl", size: 53, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "contract/contract.sol.tpl", size: 53, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -154,7 +154,7 @@ func helpersGo() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "helpers.go", size: 2585, mode: os.FileMode(436), modTime: time.Unix(1515710463, 0)}
+	info := bindataFileInfo{name: "helpers.go", size: 2585, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -174,7 +174,7 @@ func licensesAgplHeaderTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/agpl/header.tpl", size: 633, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/agpl/header.tpl", size: 633, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -194,7 +194,7 @@ func licensesAgplTextTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/agpl/text.tpl", size: 34521, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/agpl/text.tpl", size: 34521, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -214,7 +214,7 @@ func licensesApacheHeaderTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/apache/header.tpl", size: 525, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/apache/header.tpl", size: 525, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -234,7 +234,7 @@ func licensesApacheTextTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/apache/text.tpl", size: 11359, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/apache/text.tpl", size: 11359, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -254,7 +254,7 @@ func licensesBsdHeaderTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/bsd/header.tpl", size: 1465, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/bsd/header.tpl", size: 1465, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -274,7 +274,7 @@ func licensesBsdTextTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/bsd/text.tpl", size: 1483, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/bsd/text.tpl", size: 1483, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -294,7 +294,7 @@ func licensesFreebsdHeaderTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/freebsd/header.tpl", size: 1267, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/freebsd/header.tpl", size: 1267, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -314,7 +314,7 @@ func licensesFreebsdTextTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/freebsd/text.tpl", size: 1285, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/freebsd/text.tpl", size: 1285, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -334,7 +334,7 @@ func licensesGpl2HeaderTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/gpl2/header.tpl", size: 619, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/gpl2/header.tpl", size: 619, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -354,7 +354,7 @@ func licensesGpl2TextTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/gpl2/text.tpl", size: 18093, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/gpl2/text.tpl", size: 18093, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -374,7 +374,7 @@ func licensesGpl3HeaderTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/gpl3/header.tpl", size: 612, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/gpl3/header.tpl", size: 612, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -394,7 +394,7 @@ func licensesGpl3TextTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/gpl3/text.tpl", size: 35148, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/gpl3/text.tpl", size: 35148, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -414,7 +414,7 @@ func licensesLgplHeaderTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/lgpl/header.tpl", size: 633, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/lgpl/header.tpl", size: 633, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -434,7 +434,7 @@ func licensesLgplTextTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/lgpl/text.tpl", size: 7651, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/lgpl/text.tpl", size: 7651, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -454,7 +454,7 @@ func licensesMitHeaderTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/mit/header.tpl", size: 1024, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/mit/header.tpl", size: 1024, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -474,7 +474,7 @@ func licensesMitTextTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "licenses/mit/text.tpl", size: 1065, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "licenses/mit/text.tpl", size: 1065, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -494,7 +494,7 @@ func migrationMigrationGoTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "migration/migration.go.tpl", size: 1826, mode: os.FileMode(436), modTime: time.Unix(1515629365, 0)}
+	info := bindataFileInfo{name: "migration/migration.go.tpl", size: 1826, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -514,7 +514,7 @@ func projectGitignoreTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "project/.gitignore.tpl", size: 17, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "project/.gitignore.tpl", size: 17, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -534,7 +534,7 @@ func projectContractsFooSolTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "project/contracts/Foo.sol.tpl", size: 115, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "project/contracts/Foo.sol.tpl", size: 115, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -554,7 +554,7 @@ func projectGenerateGoTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "project/generate.go.tpl", size: 98, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "project/generate.go.tpl", size: 98, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -574,7 +574,7 @@ func projectMainGoTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "project/main.go.tpl", size: 273, mode: os.FileMode(436), modTime: time.Unix(1515629365, 0)}
+	info := bindataFileInfo{name: "project/main.go.tpl", size: 273, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -594,7 +594,7 @@ func projectMigrations1_migrationsGo() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "project/migrations/1_Migrations.go", size: 1812, mode: os.FileMode(436), modTime: time.Unix(1515629365, 0)}
+	info := bindataFileInfo{name: "project/migrations/1_Migrations.go", size: 1812, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -614,7 +614,7 @@ func projectPerigordYamlTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "project/perigord.yaml.tpl", size: 170, mode: os.FileMode(436), modTime: time.Unix(1515629365, 0)}
+	info := bindataFileInfo{name: "project/perigord.yaml.tpl", size: 170, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -634,7 +634,7 @@ func projectStubReadmeMdTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "project/stub/README.md.tpl", size: 323, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "project/stub/README.md.tpl", size: 323, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -654,7 +654,7 @@ func projectStubMainGoTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "project/stub/main.go.tpl", size: 170, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "project/stub/main.go.tpl", size: 170, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -674,7 +674,7 @@ func projectStub_testGoTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "project/stub_test.go.tpl", size: 199, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "project/stub_test.go.tpl", size: 199, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -694,7 +694,7 @@ func projectTestsFooGoTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "project/tests/Foo.go.tpl", size: 648, mode: os.FileMode(436), modTime: time.Unix(1511186498, 0)}
+	info := bindataFileInfo{name: "project/tests/Foo.go.tpl", size: 648, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -714,7 +714,7 @@ func solcSolcJsonTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "solc/solc.json.tpl", size: 638, mode: os.FileMode(436), modTime: time.Unix(1515781412, 0)}
+	info := bindataFileInfo{name: "solc/solc.json.tpl", size: 638, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -734,7 +734,7 @@ func testTestGoTpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "test/test.go.tpl", size: 525, mode: os.FileMode(436), modTime: time.Unix(1515629365, 0)}
+	info := bindataFileInfo{name: "test/test.go.tpl", size: 525, mode: os.FileMode(436), modTime: time.Unix(1517899410, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

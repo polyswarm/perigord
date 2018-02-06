@@ -29,13 +29,14 @@ func DeployMigrations(auth *bind.TransactOpts, backend bind.ContractBackend) (co
 	if err != nil {
 		return common.Address{}, nil, nil, err
 	}
-	return address, tx, &Migrations{MigrationsCaller: MigrationsCaller{contract: contract}, MigrationsTransactor: MigrationsTransactor{contract: contract}}, nil
+	return address, tx, &Migrations{MigrationsCaller: MigrationsCaller{contract: contract}, MigrationsTransactor: MigrationsTransactor{contract: contract}, MigrationsFilterer: MigrationsFilterer{contract: contract}}, nil
 }
 
 // Migrations is an auto generated Go binding around an Ethereum contract.
 type Migrations struct {
 	MigrationsCaller     // Read-only binding to the contract
 	MigrationsTransactor // Write-only binding to the contract
+	MigrationsFilterer   // Log filterer for contract events
 }
 
 // MigrationsCaller is an auto generated read-only Go binding around an Ethereum contract.
@@ -45,6 +46,11 @@ type MigrationsCaller struct {
 
 // MigrationsTransactor is an auto generated write-only Go binding around an Ethereum contract.
 type MigrationsTransactor struct {
+	contract *bind.BoundContract // Generic contract wrapper for the low level calls
+}
+
+// MigrationsFilterer is an auto generated log filtering Go binding around an Ethereum contract events.
+type MigrationsFilterer struct {
 	contract *bind.BoundContract // Generic contract wrapper for the low level calls
 }
 
@@ -87,16 +93,16 @@ type MigrationsTransactorRaw struct {
 
 // NewMigrations creates a new instance of Migrations, bound to a specific deployed contract.
 func NewMigrations(address common.Address, backend bind.ContractBackend) (*Migrations, error) {
-	contract, err := bindMigrations(address, backend, backend)
+	contract, err := bindMigrations(address, backend, backend, backend)
 	if err != nil {
 		return nil, err
 	}
-	return &Migrations{MigrationsCaller: MigrationsCaller{contract: contract}, MigrationsTransactor: MigrationsTransactor{contract: contract}}, nil
+	return &Migrations{MigrationsCaller: MigrationsCaller{contract: contract}, MigrationsTransactor: MigrationsTransactor{contract: contract}, MigrationsFilterer: MigrationsFilterer{contract: contract}}, nil
 }
 
 // NewMigrationsCaller creates a new read-only instance of Migrations, bound to a specific deployed contract.
 func NewMigrationsCaller(address common.Address, caller bind.ContractCaller) (*MigrationsCaller, error) {
-	contract, err := bindMigrations(address, caller, nil)
+	contract, err := bindMigrations(address, caller, nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -105,20 +111,29 @@ func NewMigrationsCaller(address common.Address, caller bind.ContractCaller) (*M
 
 // NewMigrationsTransactor creates a new write-only instance of Migrations, bound to a specific deployed contract.
 func NewMigrationsTransactor(address common.Address, transactor bind.ContractTransactor) (*MigrationsTransactor, error) {
-	contract, err := bindMigrations(address, nil, transactor)
+	contract, err := bindMigrations(address, nil, transactor, nil)
 	if err != nil {
 		return nil, err
 	}
 	return &MigrationsTransactor{contract: contract}, nil
 }
 
+// NewMigrationsFilterer creates a new log filterer instance of Migrations, bound to a specific deployed contract.
+func NewMigrationsFilterer(address common.Address, filterer bind.ContractFilterer) (*MigrationsFilterer, error) {
+	contract, err := bindMigrations(address, nil, nil, filterer)
+	if err != nil {
+		return nil, err
+	}
+	return &MigrationsFilterer{contract: contract}, nil
+}
+
 // bindMigrations binds a generic wrapper to an already deployed contract.
-func bindMigrations(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor) (*bind.BoundContract, error) {
+func bindMigrations(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor, filterer bind.ContractFilterer) (*bind.BoundContract, error) {
 	parsed, err := abi.JSON(strings.NewReader(MigrationsABI))
 	if err != nil {
 		return nil, err
 	}
-	return bind.NewBoundContract(address, parsed, caller, transactor), nil
+	return bind.NewBoundContract(address, parsed, caller, transactor, filterer), nil
 }
 
 // Call invokes the (constant) contract method with params as input values and

@@ -17,7 +17,7 @@ import (
 const MigrationsABI = "[{\"constant\":false,\"inputs\":[{\"name\":\"new_address\",\"type\":\"address\"}],\"name\":\"upgrade\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"last_completed_migration\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"completed\",\"type\":\"uint256\"}],\"name\":\"setCompleted\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"}]"
 
 // MigrationsBin is the compiled bytecode used for deploying new contracts.
-const MigrationsBin = `0x6060604052341561000f57600080fd5b60008054600160a060020a033316600160a060020a03199091161790556101e78061003b6000396000f3006060604052600436106100615763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416630900f0108114610066578063445df0ac146100875780638da5cb5b146100ac578063fdacd576146100db575b600080fd5b341561007157600080fd5b610085600160a060020a03600435166100f1565b005b341561009257600080fd5b61009a610186565b60405190815260200160405180910390f35b34156100b757600080fd5b6100bf61018c565b604051600160a060020a03909116815260200160405180910390f35b34156100e657600080fd5b61008560043561019b565b6000805433600160a060020a03908116911614156101825781905080600160a060020a031663fdacd5766001546040517c010000000000000000000000000000000000000000000000000000000063ffffffff84160281526004810191909152602401600060405180830381600087803b151561016d57600080fd5b6102c65a03f1151561017e57600080fd5b5050505b5050565b60015481565b600054600160a060020a031681565b60005433600160a060020a03908116911614156101b85760018190555b505600a165627a7a723058200824f93e597a9d85454a976fc84d543c9e8eed865fa2fdc64de940d056328de30029`
+const MigrationsBin = `0x6060604052341561000f57600080fd5b60008054600160a060020a033316600160a060020a03199091161790556102318061003b6000396000f3006060604052600436106100615763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416630900f0108114610066578063445df0ac146100945780638da5cb5b146100b9578063fdacd576146100f5575b600080fd5b341561007157600080fd5b61009273ffffffffffffffffffffffffffffffffffffffff6004351661010b565b005b341561009f57600080fd5b6100a76101b6565b60405190815260200160405180910390f35b34156100c457600080fd5b6100cc6101bc565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341561010057600080fd5b6100926004356101d8565b600080543373ffffffffffffffffffffffffffffffffffffffff908116911614156101b2578190508073ffffffffffffffffffffffffffffffffffffffff1663fdacd5766001546040517c010000000000000000000000000000000000000000000000000000000063ffffffff84160281526004810191909152602401600060405180830381600087803b15156101a157600080fd5b5af115156101ae57600080fd5b5050505b5050565b60015481565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b6000543373ffffffffffffffffffffffffffffffffffffffff908116911614156102025760018190555b505600a165627a7a72305820daa46c2661dde355554946b93b2584d14438c13d1540ac6d615370433266e2420029`
 
 // DeployMigrations deploys a new Ethereum contract, binding an instance of Migrations to it.
 func DeployMigrations(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *Migrations, error) {
@@ -174,10 +174,10 @@ func (_Migrations *MigrationsTransactorRaw) Transact(opts *bind.TransactOpts, me
 	return _Migrations.Contract.contract.Transact(opts, method, params...)
 }
 
-// Last_completed_migration is a free data retrieval call binding the contract method 0x445df0ac.
+// LastCompletedMigration is a free data retrieval call binding the contract method 0x445df0ac.
 //
 // Solidity: function last_completed_migration() constant returns(uint256)
-func (_Migrations *MigrationsCaller) Last_completed_migration(opts *bind.CallOpts) (*big.Int, error) {
+func (_Migrations *MigrationsCaller) LastCompletedMigration(opts *bind.CallOpts) (*big.Int, error) {
 	var (
 		ret0 = new(*big.Int)
 	)
@@ -186,18 +186,18 @@ func (_Migrations *MigrationsCaller) Last_completed_migration(opts *bind.CallOpt
 	return *ret0, err
 }
 
-// Last_completed_migration is a free data retrieval call binding the contract method 0x445df0ac.
+// LastCompletedMigration is a free data retrieval call binding the contract method 0x445df0ac.
 //
 // Solidity: function last_completed_migration() constant returns(uint256)
-func (_Migrations *MigrationsSession) Last_completed_migration() (*big.Int, error) {
-	return _Migrations.Contract.Last_completed_migration(&_Migrations.CallOpts)
+func (_Migrations *MigrationsSession) LastCompletedMigration() (*big.Int, error) {
+	return _Migrations.Contract.LastCompletedMigration(&_Migrations.CallOpts)
 }
 
-// Last_completed_migration is a free data retrieval call binding the contract method 0x445df0ac.
+// LastCompletedMigration is a free data retrieval call binding the contract method 0x445df0ac.
 //
 // Solidity: function last_completed_migration() constant returns(uint256)
-func (_Migrations *MigrationsCallerSession) Last_completed_migration() (*big.Int, error) {
-	return _Migrations.Contract.Last_completed_migration(&_Migrations.CallOpts)
+func (_Migrations *MigrationsCallerSession) LastCompletedMigration() (*big.Int, error) {
+	return _Migrations.Contract.LastCompletedMigration(&_Migrations.CallOpts)
 }
 
 // Owner is a free data retrieval call binding the contract method 0x8da5cb5b.

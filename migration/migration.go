@@ -68,7 +68,7 @@ func (m *Migrator) RunMigrations(ctx context.Context, net *network.Network, clea
 
 	migrationsSession, ok := contract.Session("Migrations").(*bindings.MigrationsSession)
 	if !clean && migrationsSession != nil && ok {
-		lm, err := migrationsSession.LastCompletedMigration()
+		lm, err := migrationsSession.Last_completed_migration()
 		if err != nil {
 			return err
 		}

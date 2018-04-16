@@ -1,7 +1,7 @@
 package tests
 
 import (
-	. "gopkg.in/check.v1"
+	"gopkg.in/check.v1"
 
 	"github.com/polyswarm/perigord/contract"
 	"github.com/polyswarm/perigord/testing"
@@ -13,17 +13,17 @@ type foo_test struct{}
 
 var _ = Suite(&foo_test{})
 
-func (s *foo_test) SetUpTest(c *C) {
+func (s *foo_test) SetUpTest(c *check.C) {
 	testing.SetUpTest()
 }
 
-func (s *foo_test) TearDownTest(c *C) {
+func (s *foo_test) TearDownTest(c *check.C) {
 	testing.TearDownTest()
 }
 
 // USER TESTS GO HERE
 
-func (s *foo_test) TestFoo(c *C) {
+func (s *foo_test) TestFoo(c *check.C) {
 	session := contract.Session("Foo")
 	c.Assert(session, NotNil)
 

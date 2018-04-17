@@ -57,7 +57,6 @@ func (c *Contract) Deploy(ctx context.Context, network *network.Network) error {
 		c.Address = address
 		c.Session = session
 		c.deployed = true
-		return nil
 	} else {
 		session, err := c.deployer.Bind(ctx, network, c.Address)
 		if err != nil {
@@ -65,8 +64,9 @@ func (c *Contract) Deploy(ctx context.Context, network *network.Network) error {
 		}
 
 		c.Session = session
-		return nil
 	}
+
+	return nil
 }
 
 var contracts map[string]*Contract = make(map[string]*Contract)

@@ -1,3 +1,16 @@
+# NOT ACTIVELY MAINTAINED
+
+**The PolySwarm team is currently unable to actively maintain Perigord at the moment.**
+
+The PolySwarm team's priority is to faithfully deliver on our roadmap (https://polyswarm.io/road_map/index.html), which regrettably demands we turn our attention away from Perigord in the short term.
+The Ethereum smart contract development space is simply moving too quickly right now for us to support a Truffle alternative in addition to hitting our development milestones.
+
+**We plan to return to active Perigord maintenance in the future and will continue to welcome external contributions until we're able to resume work.**
+
+Thank you for your understanding!
+~Paul
+
+
 # Perigord: Golang Tools for Ethereum Development
 
 *Note:* Perigord is in development and it's API is subject to change.

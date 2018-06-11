@@ -8,6 +8,7 @@ The Ethereum smart contract development space is simply moving too quickly right
 **We plan to return to active Perigord maintenance in the future and will continue to welcome external contributions until we're able to resume work.**
 
 Thank you for your understanding!
+
 ~Paul
 
 

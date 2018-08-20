@@ -5,7 +5,7 @@ import (
 
 	_ "{{.project}}/tests"
 	_ "{{.project}}/migrations"
-	. "gopkg.in/check.v1"
+	"gopkg.in/check.v1"
 )
 
 // Hook up gocheck into the "go test" runner
